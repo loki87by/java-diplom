@@ -2,8 +2,9 @@ package ewm.Controllers;
 
 import ewm.Objects.EventRequest;
 import ewm.Services.RequestService;
+import ewm.Utils.ConflictException;
+import ewm.Utils.ValidationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,19 +28,19 @@ public class PrivateRequestsController {
         EventRequest oldReq = service.findRequest(userId, eventId);
 
         if(oldReq != null) {
-            throw new DuplicateKeyException("Дубликат запроса");
+            throw new ConflictException("Дубликат запроса");
         }
 
         if(service.checkOwner(userId, eventId)) {
-            throw new IllegalArgumentException();
+            throw new ValidationException("Not owner");
         }
 
         if(!service.checkPublished(eventId)) {
-            throw new SecurityException();
+            throw new ValidationException("Not public");
         }
 
         if(!service.checkLimit(eventId)) {
-            throw new IllegalArgumentException();
+            throw new ConflictException("over limit");
         }
 
         return service.setRequest(userId, eventId);
@@ -48,7 +49,7 @@ public class PrivateRequestsController {
     @PatchMapping("/{requestId}/cancel")
     public EventRequest cancelRequest(
             @PathVariable Long userId,
-            @PathVariable Long requestId) throws ClassNotFoundException {
+            @PathVariable Long requestId) {
         return service.cancelRequest(userId, requestId);
     }
 }

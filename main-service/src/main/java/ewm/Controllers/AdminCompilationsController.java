@@ -24,7 +24,7 @@ public class AdminCompilationsController {
     }
 
     @DeleteMapping("/{compId}")
-    public String deleteCompilation(@PathVariable Long compId) throws ClassNotFoundException {
+    public String deleteCompilation(@PathVariable Long compId) {
         Compilation comp = service.getCurrent(compId);
         return service.deleteCompilation(comp);
     }

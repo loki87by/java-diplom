@@ -5,6 +5,7 @@ import ewm.Objects.StringObject;
 import ewm.Objects.User;
 import ewm.Repositoryes.CategoryRepo;
 import ewm.Repositoryes.UserRepo;
+import ewm.Utils.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class CategoryService {
 
     public Category setCategory(Long userId, StringObject data) {
         if (!checkAdmin(userId)) {
-            throw new SecurityException("");
+            throw new ValidationException("not admin");
         } else {
             Category category = new Category();
             category.setName(data.getName());
@@ -34,7 +35,7 @@ public class CategoryService {
     public StringObject updateCategory(Long userId, Long catId, String name) {
 
         if (!checkAdmin(userId)) {
-            throw new SecurityException("");
+            throw new ValidationException("not admin");
         } else {
             Category category = categoryRepo.findById(catId);
             category.setName(name);
@@ -46,9 +47,10 @@ public class CategoryService {
     }
 
     public boolean deleteCategory(Long userId, Long catId) {
+        //toDo: check no empty category and return conflict
 
         if (!checkAdmin(userId)) {
-            throw new SecurityException("");
+            throw new ValidationException("not admin");
         } else {
             return categoryRepo.deleteItem(catId);
         }

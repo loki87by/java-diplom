@@ -3,6 +3,7 @@ package ewm.Controllers;
 import ewm.Dtos.EventDto;
 import ewm.Dtos.FullEventDto;
 import ewm.Services.EventService;
+import ewm.Utils.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,13 +41,18 @@ public class EventsController {
 
     @GetMapping("/{id}")
     //TODO: add to statistic
-    public FullEventDto getEvent(@PathVariable Long id) throws ClassNotFoundException {
+    public FullEventDto getEvent(@PathVariable Long id) {
         FullEventDto event = service.getEvent(id);
+        //ToDo: check id type and return exception
+
+        if(event == null) {
+            throw new EntityNotFoundException("Event with id="+id+" was not found");
+        }
 
         if(event.getState().equals("PUBLISHED")) {
             return event;
         } else {
-            throw new ClassNotFoundException();
+            throw new EntityNotFoundException("Published event with id="+id+" was not found");
         }
     }
 }

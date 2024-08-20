@@ -3,6 +3,8 @@ package ewm.Controllers;
 import ewm.Dtos.EventUpdateResponse;
 import ewm.Dtos.FullEventDto;
 import ewm.Services.EventService;
+import ewm.Utils.EntityNotFoundException;
+import ewm.Utils.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,22 +38,26 @@ public class AdminEventsController {
 
     @PatchMapping("/{eventId}")
     public FullEventDto updateEvent(@RequestBody EventUpdateResponse data,
-            @PathVariable Long eventId) throws Exception {
+            @PathVariable Long eventId) {
         FullEventDto old = service.getEvent(eventId);
+
+        if (old == null) {
+            throw new EntityNotFoundException("Event with id="+eventId+" was not found");
+        }
         Timestamp eventTime = old.getPublishedOn();
         long currentTimeMillis = System.currentTimeMillis();
         Timestamp minimalTime = new Timestamp(currentTimeMillis + 3600000);
 
         if (eventTime.before(minimalTime)) {
-            throw new Exception("Publication time need after now+1hrs");
+            throw new ForbiddenException("Publication time need after now+1hrs");
         }
 
         if (!old.getState().equals("PENDING") && data.getState().equals("PUBLISH_EVENT")) {
-            throw new Exception("Only pending events can`t be PUBLISH");
+            throw new ForbiddenException("Only pending events can`t be PUBLISH");
         }
 
         if (!old.getState().equals("PUBLISH") && data.getState().equals("REJECT_EVENT")) {
-            throw new Exception("PUBLISHED events can`t be REJECT");
+            throw new ForbiddenException("PUBLISHED events can`t be REJECT");
         }
         return service.updateAndApproveEvent(data, eventId);
     }

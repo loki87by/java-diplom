@@ -1,6 +1,7 @@
 package ewm.Repositoryes;
 
 import ewm.Objects.Category;
+import ewm.Utils.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -19,6 +20,11 @@ public class CategoryRepo {
     }
 
     public boolean deleteItem(Long id) {
+        Category current = findById(id);
+
+        if(current == null) {
+            throw new EntityNotFoundException("Category with id="+id+" was not found");
+        }
         try {
             jpa.deleteById(id);
             return true;

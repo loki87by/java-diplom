@@ -22,7 +22,8 @@ public class CompilationsController {
     }
 
     @GetMapping("/{compId}")
-    public Compilation getCurrent(@PathVariable Long compId) throws ClassNotFoundException {
+    public Compilation getCurrent(@PathVariable Long compId) {
+        //ToDo: check type of id and return exception
         return service.getCurrent(compId);
     }
 }

@@ -7,11 +7,11 @@ import ewm.Dtos.newEventDto;
 import ewm.Objects.RequestConfirmBody;
 import ewm.Objects.RequestConfirmResponse;
 import ewm.Services.EventService;
+import ewm.Utils.ConflictException;
+import ewm.Utils.ForbiddenException;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.LimitExceededException;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -32,33 +32,33 @@ public class PrivateEventsController {
 
     @GetMapping("/{eventId}")
     public FullEventDto getEvent(
-            @PathVariable Long userId, @PathVariable Long eventId) throws ClassNotFoundException {
+            @PathVariable Long userId, @PathVariable Long eventId) {
+        //ToDo: check type and return exception
         return service.getEvent(userId, eventId);
     }
 
     @GetMapping("/{eventId}/requests")
     public EventRequest getEventRequest(
-            @PathVariable Long userId, @PathVariable Long eventId) throws BadRequestException {
+            @PathVariable Long userId, @PathVariable Long eventId) {
         return service.getRequest(userId, eventId);
     }
 
     @PatchMapping("/{eventId}/requests")
     public RequestConfirmResponse confirmEventRequest(
-            @PathVariable Long userId, @PathVariable Long eventId, @RequestBody RequestConfirmBody body)
-            throws ClassNotFoundException, LimitExceededException, BadRequestException {
+            @PathVariable Long userId, @PathVariable Long eventId, @RequestBody RequestConfirmBody body) {
         FullEventDto event = service.getEvent(userId, eventId);
         int limit = event.getParticipantLimit();
         int confirmedCount = event.getConfirmedRequests();
 
         if (confirmedCount >= limit) {
-            throw new LimitExceededException();
+            throw new ConflictException("The participant limit has been reached");
         }
         return service.confirmEventRequest(userId, eventId, body);
     }
 
     @PatchMapping("/{eventId}")
     public FullEventDto updateEvent(
-            @RequestBody FullEventDto dto, @PathVariable Long userId, @PathVariable Long eventId) throws Exception {
+            @RequestBody FullEventDto dto, @PathVariable Long userId, @PathVariable Long eventId) {
         FullEventDto old = service.getEvent(userId, eventId);
         String state = old.getState();
         Timestamp eventTime = dto.getEventDate();
@@ -66,11 +66,11 @@ public class PrivateEventsController {
         Timestamp minimalTime = new Timestamp(currentTimeMillis + 7200000);
 
         if (!state.equals("CANCEL_REVIEW") && !state.equals("PENDING")) {
-            throw new Exception("Only pending or canceled events can be changed");
+            throw new ForbiddenException("Only pending or canceled events can be changed");
         }
 
         if (eventTime.before(minimalTime)) {
-            throw new Exception("Time need after now+2hrs");
+            throw new ForbiddenException("Time need after now+2hrs");
         }
         return service.updateEvent(userId, dto, eventId);
     }

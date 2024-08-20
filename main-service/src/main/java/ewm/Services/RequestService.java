@@ -4,6 +4,7 @@ import ewm.Objects.Event;
 import ewm.Objects.EventRequest;
 import ewm.Repositoryes.EventRequestsRepo;
 import ewm.Repositoryes.EventsRepo;
+import ewm.Utils.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -59,11 +60,11 @@ public class RequestService {
         return rRepo.addRequest(req);
     }
 
-    public EventRequest cancelRequest(Long userId, Long eventId) throws ClassNotFoundException {
+    public EventRequest cancelRequest(Long userId, Long eventId) {
         EventRequest req = rRepo.findRequest(userId, eventId);
 
         if(req == null) {
-            throw new ClassNotFoundException();
+            throw new EntityNotFoundException("Event with id="+eventId+" was not found");
         }
         req.setStatus("PENDING");
         return rRepo.addRequest(req);

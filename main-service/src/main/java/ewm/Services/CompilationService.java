@@ -7,6 +7,8 @@ import ewm.Objects.CompilationRequest;
 import ewm.Objects.Event;
 import ewm.Repositoryes.CompilationsRepo;
 import ewm.Repositoryes.EventsRepo;
+import ewm.Utils.EntityNotFoundException;
+import ewm.Utils.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -65,11 +67,11 @@ public class CompilationService {
         }
     }
 
-    public Compilation getCurrent(Long id) throws ClassNotFoundException {
+    public Compilation getCurrent(Long id) {
         Compilation comp = repo.getCurrent(id);
 
         if (comp == null) {
-            throw new ClassNotFoundException();
+            throw new EntityNotFoundException("Compilation with id="+id+" was not found");
         }
         List<EventDto> events = getEvents(comp.getId());
         comp.setEvents(events);
@@ -88,7 +90,7 @@ public class CompilationService {
         if (!title.isEmpty()) {
             old.setTitle(title);
         } else {
-            throw new IllegalArgumentException();
+            throw new ForbiddenException("field title was not been empty");
         }
         List<Long> eventIds = comp.getEvents();
         List<Event> events = eRepo.findAllByCategoryId(id);

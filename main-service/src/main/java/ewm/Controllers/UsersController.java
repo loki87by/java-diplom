@@ -3,7 +3,6 @@ package ewm.Controllers;
 import ewm.Objects.User;
 import ewm.Services.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,12 +23,12 @@ public class UsersController {
     }
     @PostMapping("/")
     public User setUser(
-            @RequestBody User user) throws BadRequestException {
+            @RequestBody User user) {
         return service.setUser(user);
     }
     @DeleteMapping("/{userId}")
     public String deleteUser(
-            @PathVariable Long userId) throws ClassNotFoundException {
+            @PathVariable Long userId){
         return service.deleteUser(userId);
     }
 

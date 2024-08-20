@@ -8,8 +8,9 @@ import ewm.Mappers.EventMapper;
 import ewm.Objects.*;
 import ewm.Repositoryes.EventRequestsRepo;
 import ewm.Repositoryes.EventsRepo;
+import ewm.Utils.EntityNotFoundException;
+import ewm.Utils.ValidationException;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -35,10 +36,10 @@ public class EventService {
         return events;
     }
 
-    public FullEventDto getEvent(Long userId, Long eventId) throws ClassNotFoundException {
+    public FullEventDto getEvent(Long userId, Long eventId) {
         Event result = eRepo.getEvent(userId, eventId);
         if (result == null) {
-            throw new ClassNotFoundException();
+            throw new EntityNotFoundException("Event with id=" + eventId + " was not found");
         }
         return mapper.toFullDto(result);
     }
@@ -53,37 +54,41 @@ public class EventService {
         return mapper.toFullDto(result);
     }
 
-    public FullEventDto updateEvent(Long userId, FullEventDto dto, Long eventId) throws IllegalAccessException, ClassNotFoundException {
+    public FullEventDto updateEvent(Long userId, FullEventDto dto, Long eventId) {
         FullEventDto oldDto = getEvent(userId, eventId);
         Class<?> objectClass = FullEventDto.class;
         Field[] fields = objectClass.getDeclaredFields();
 
         for (Field field : fields) {
             field.setAccessible(true);
-            Object value = field.get(dto);
+            try {
+                Object value = field.get(dto);
 
-            if (value != null) {
-                field.set(oldDto, value);
+                if (value != null) {
+                    field.set(oldDto, value);
+                }
+            }
+            catch (IllegalArgumentException | IllegalAccessException e) {
+                throw new ValidationException(e.getMessage());
             }
         }
         Event updatedEvent = eRepo.setEvent(mapper.toEvent(userId, oldDto));
         return mapper.toFullDto(updatedEvent);
     }
 
-    public EventRequest getRequest(Long userId, Long eventId) throws BadRequestException {
+    public EventRequest getRequest(Long userId, Long eventId) {
         Event event = eRepo.getEvent(userId, eventId);
         if (event == null) {
-            throw new BadRequestException();
+            throw new EntityNotFoundException("Событие с id=" + eventId + " с запросом от пользователя с id=" + userId + " не найдено.");
         }
         return rRepo.findByEventId(eventId);
     }
 
-    private boolean checkStatus(Long id) throws ClassNotFoundException {
+    private boolean checkStatus(Long id) {
         return rRepo.findStatusById(id).equals("PENDING");
     }
 
-    public RequestConfirmResponse confirmEventRequest(Long userId, Long eventId, RequestConfirmBody body)
-            throws ClassNotFoundException, BadRequestException {
+    public RequestConfirmResponse confirmEventRequest(Long userId, Long eventId, RequestConfirmBody body) {
         Event event = eRepo.getEvent(userId, eventId);
         int limit = event.getParticipantLimit();
         int confirmedCount = event.getConfirmedRequests();
@@ -91,7 +96,7 @@ public class EventService {
 
         for (Long id : reqIds) {
             if (!checkStatus(id)) {
-                throw new IllegalArgumentException();
+                throw new ValidationException("Request must have status PENDING");
             }
         }
         List<EventRequest> confirmedRequests = new ArrayList<>();
@@ -108,7 +113,7 @@ public class EventService {
                 EventRequest updated = rRepo.changeStatus(id, body.getStatus());
                 confirmedRequests.add(updated);
             } else {
-                throw new BadRequestException("unknown status");
+                throw new ValidationException("unknown status");
             }
         }
         RequestConfirmResponse res = new RequestConfirmResponse();
@@ -139,35 +144,39 @@ public class EventService {
                 from,
                 size);
         List<FullEventDto> fulls = new ArrayList<>();
-        for (Event event: events) {
+        for (Event event : events) {
             fulls.add(mapper.toFullDto(event));
         }
         return fulls;
     }
 
-    public FullEventDto updateAndApproveEvent(EventUpdateResponse data, Long eventId) throws IllegalAccessException {
+    public FullEventDto updateAndApproveEvent(EventUpdateResponse data, Long eventId) {
         Event oldDto = eRepo.getEvent(eventId);
         Class<?> objectClass = EventUpdateResponse.class;
         Field[] fields = objectClass.getDeclaredFields();
 
         for (Field field : fields) {
             field.setAccessible(true);
-            Object value = field.get(data);
+            try {
+                Object value = field.get(data);
 
-            if (value != null) {
-                try {
-                    Field correspondingField = oldDto.getClass().getDeclaredField(field.getName());
-                    correspondingField.setAccessible(true);
-                    correspondingField.set(oldDto, value);
-                } catch (NoSuchFieldException e) {
-                    if(field.getName().equals("stateAction")){
-                        if(value.equals("PUBLISH_EVENT")) {
-                            oldDto.setState("PUBLISHED");
-                        } else if(value.equals("REJECT_EVENT")) {
-                            oldDto.setState("REJECTED");
+                if (value != null) {
+                    try {
+                        Field correspondingField = oldDto.getClass().getDeclaredField(field.getName());
+                        correspondingField.setAccessible(true);
+                        correspondingField.set(oldDto, value);
+                    } catch (NoSuchFieldException e) {
+                        if (field.getName().equals("stateAction")) {
+                            if (value.equals("PUBLISH_EVENT")) {
+                                oldDto.setState("PUBLISHED");
+                            } else if (value.equals("REJECT_EVENT")) {
+                                oldDto.setState("REJECTED");
+                            }
                         }
                     }
                 }
+            } catch (IllegalArgumentException | IllegalAccessException e) {
+                throw new ValidationException(e.getMessage());
             }
         }
         Event updatedEvent = eRepo.setEvent(oldDto);
@@ -194,7 +203,7 @@ public class EventService {
                 from,
                 size);
         List<EventDto> fulls = new ArrayList<>();
-        for (Event event: events) {
+        for (Event event : events) {
             fulls.add(mapper.toObject(event));
         }
         return fulls;

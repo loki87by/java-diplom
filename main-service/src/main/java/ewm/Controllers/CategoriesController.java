@@ -3,6 +3,7 @@ package ewm.Controllers;
 import ewm.Objects.Category;
 import ewm.Services.CategoryService;
 
+import ewm.Utils.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -21,13 +22,14 @@ public class CategoriesController {
     }
 
     @GetMapping("/{catId}")
-    public Category getCategory(@PathVariable Long catId) throws ClassNotFoundException {
+    public Category getCategory(@PathVariable Long catId) {
         Category cat = service.getCategory(catId);
+        //Todo: handle no long format id
 
         if(cat != null) {
             return cat;
         } else {
-            throw new ClassNotFoundException();
+            throw new EntityNotFoundException("Category with id="+catId+" was not found");
         }
     }
 }

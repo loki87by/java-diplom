@@ -3,11 +3,10 @@ package ewm.Controllers;
 import ewm.Objects.Category;
 import ewm.Objects.StringObject;
 import ewm.Services.CategoryService;
+import ewm.Utils.InternalServerErrorException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/admin/categories")
@@ -36,7 +35,7 @@ public class AdminCategoriesController {
         if (service.deleteCategory(userId, catId)){
             return ResponseEntity.noContent().build();
         } else {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Failed to delete item");
+            throw new InternalServerErrorException("Failed to delete item");
         }
     }
 }
