@@ -1,14 +1,16 @@
 package ewm.Mappers;
 
-import ewm.Objects.Event;
+import ewm.Entityes.Event;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
+@Component
 public class EventSpecificationsMapper {
     public Specification<Event> filterEvents(List<Long> userIds,
                                              List<String> states,

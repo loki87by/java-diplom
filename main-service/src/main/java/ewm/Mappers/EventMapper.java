@@ -3,13 +3,15 @@ package ewm.Mappers;
 import ewm.Dtos.EventDto;
 import ewm.Dtos.FullEventDto;
 import ewm.Dtos.newEventDto;
-import ewm.Objects.*;
+import ewm.Entityes.*;
 import ewm.Repositoryes.CategoryRepo;
 import ewm.Repositoryes.EventsRepo;
 import ewm.Repositoryes.LocationRepo;
 import ewm.Repositoryes.UserRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
 @RequiredArgsConstructor
 public class EventMapper {
     private final CategoryRepo categoryRepo;

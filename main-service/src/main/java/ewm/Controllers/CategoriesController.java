@@ -1,9 +1,9 @@
 package ewm.Controllers;
 
-import ewm.Objects.Category;
+import ewm.Entityes.Category;
 import ewm.Services.CategoryService;
 
-import ewm.Utils.EntityNotFoundException;
+import ewm.Errors.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;

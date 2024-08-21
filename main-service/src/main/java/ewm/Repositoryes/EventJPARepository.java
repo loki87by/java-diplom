@@ -1,7 +1,7 @@
 package ewm.Repositoryes;
 
 
-import ewm.Objects.Event;
+import ewm.Entityes.Event;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;

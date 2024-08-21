@@ -2,13 +2,13 @@ package ewm.Services;
 
 import ewm.Dtos.EventDto;
 import ewm.Mappers.EventMapper;
-import ewm.Objects.Compilation;
-import ewm.Objects.CompilationRequest;
-import ewm.Objects.Event;
+import ewm.Entityes.Compilation;
+import ewm.Entityes.CompilationRequest;
+import ewm.Entityes.Event;
 import ewm.Repositoryes.CompilationsRepo;
 import ewm.Repositoryes.EventsRepo;
-import ewm.Utils.EntityNotFoundException;
-import ewm.Utils.ForbiddenException;
+import ewm.Errors.EntityNotFoundException;
+import ewm.Errors.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

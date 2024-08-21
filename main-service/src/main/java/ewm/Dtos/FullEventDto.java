@@ -1,8 +1,8 @@
 package ewm.Dtos;
 
-import ewm.Objects.Category;
-import ewm.Objects.Location;
-import ewm.Objects.User;
+import ewm.Entityes.Category;
+import ewm.Entityes.Location;
+import ewm.Entityes.User;
 import lombok.Data;
 
 import java.sql.Timestamp;

@@ -1,19 +1,15 @@
-package ewm.Objects;
+package ewm.Entityes;
 
 import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "categoryes")
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
     @Column(name = "name", nullable = false)
     String name;
-    @Column(name = "email", nullable = false)
-    String email;
-    @Column(name = "is_admin", nullable = false)
-    Boolean isAdmin;
 }

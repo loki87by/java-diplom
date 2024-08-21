@@ -1,6 +1,6 @@
 package ewm.Dtos;
 
-import ewm.Objects.Event;
+import ewm.Entityes.Event;
 
 public class EventUpdateResponse extends Event {
     String stateAction;

@@ -1,11 +1,11 @@
 package ewm.Services;
 
-import ewm.Objects.Category;
-import ewm.Objects.StringObject;
-import ewm.Objects.User;
+import ewm.Entityes.Category;
+import ewm.Entityes.StringObject;
+import ewm.Entityes.User;
 import ewm.Repositoryes.CategoryRepo;
 import ewm.Repositoryes.UserRepo;
-import ewm.Utils.ValidationException;
+import ewm.Errors.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package ewm.Utils;
+package ewm.Errors;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;

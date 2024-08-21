@@ -1,14 +1,14 @@
 package ewm.Controllers;
 
 import ewm.Dtos.EventDto;
-import ewm.Objects.EventRequest;
+import ewm.Entityes.EventRequest;
 import ewm.Dtos.FullEventDto;
 import ewm.Dtos.newEventDto;
-import ewm.Objects.RequestConfirmBody;
-import ewm.Objects.RequestConfirmResponse;
+import ewm.Entityes.RequestConfirmBody;
+import ewm.Entityes.RequestConfirmResponse;
 import ewm.Services.EventService;
-import ewm.Utils.ConflictException;
-import ewm.Utils.ForbiddenException;
+import ewm.Errors.ConflictException;
+import ewm.Errors.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

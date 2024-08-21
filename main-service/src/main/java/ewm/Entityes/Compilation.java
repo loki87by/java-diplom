@@ -1,4 +1,4 @@
-package ewm.Objects;
+package ewm.Entityes;
 
 import ewm.Dtos.EventDto;
 import jakarta.persistence.*;

@@ -1,6 +1,6 @@
 package ewm.Repositoryes;
 
-import ewm.Objects.Compilation;
+import ewm.Entityes.Compilation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

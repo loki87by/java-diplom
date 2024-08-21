@@ -1,9 +1,9 @@
 package ewm.Controllers;
 
-import ewm.Objects.EventRequest;
+import ewm.Entityes.EventRequest;
 import ewm.Services.RequestService;
-import ewm.Utils.ConflictException;
-import ewm.Utils.ValidationException;
+import ewm.Errors.ConflictException;
+import ewm.Errors.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

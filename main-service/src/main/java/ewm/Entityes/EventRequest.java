@@ -1,4 +1,4 @@
-package ewm.Objects;
+package ewm.Entityes;
 
 import jakarta.persistence.*;
 import lombok.Data;

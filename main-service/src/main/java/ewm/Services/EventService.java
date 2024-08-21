@@ -5,11 +5,11 @@ import ewm.Dtos.EventUpdateResponse;
 import ewm.Dtos.FullEventDto;
 import ewm.Dtos.newEventDto;
 import ewm.Mappers.EventMapper;
-import ewm.Objects.*;
+import ewm.Entityes.*;
 import ewm.Repositoryes.EventRequestsRepo;
 import ewm.Repositoryes.EventsRepo;
-import ewm.Utils.EntityNotFoundException;
-import ewm.Utils.ValidationException;
+import ewm.Errors.EntityNotFoundException;
+import ewm.Errors.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

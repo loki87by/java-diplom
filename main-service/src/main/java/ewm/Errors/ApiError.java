@@ -1,4 +1,4 @@
-package ewm.Utils;
+package ewm.Errors;
 
 import lombok.Data;
 import org.springframework.http.HttpStatusCode;

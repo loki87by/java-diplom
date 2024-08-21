@@ -1,7 +1,7 @@
 package ewm.Repositoryes;
 
-import ewm.Objects.EventRequest;
-import ewm.Utils.EntityNotFoundException;
+import ewm.Entityes.EventRequest;
+import ewm.Errors.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

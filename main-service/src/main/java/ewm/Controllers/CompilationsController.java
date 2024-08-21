@@ -1,6 +1,6 @@
 package ewm.Controllers;
 
-import ewm.Objects.Compilation;
+import ewm.Entityes.Compilation;
 import ewm.Services.CompilationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

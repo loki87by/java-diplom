@@ -1,7 +1,7 @@
 package ewm.Repositoryes;
 
 import ewm.Mappers.EventSpecificationsMapper;
-import ewm.Objects.Event;
+import ewm.Entityes.Event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

@@ -1,9 +1,9 @@
 package ewm.Services;
 
-import ewm.Objects.User;
+import ewm.Entityes.User;
 import ewm.Repositoryes.UserRepo;
-import ewm.Utils.EntityNotFoundException;
-import ewm.Utils.ValidationException;
+import ewm.Errors.EntityNotFoundException;
+import ewm.Errors.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

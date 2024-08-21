@@ -1,6 +1,6 @@
 package ewm.Dtos;
 
-import ewm.Objects.Location;
+import ewm.Entityes.Location;
 import lombok.Data;
 
 import java.sql.Timestamp;

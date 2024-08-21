@@ -3,8 +3,8 @@ package ewm.Controllers;
 import ewm.Dtos.EventUpdateResponse;
 import ewm.Dtos.FullEventDto;
 import ewm.Services.EventService;
-import ewm.Utils.EntityNotFoundException;
-import ewm.Utils.ForbiddenException;
+import ewm.Errors.EntityNotFoundException;
+import ewm.Errors.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

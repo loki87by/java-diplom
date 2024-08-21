@@ -1,10 +1,10 @@
 package ewm.Services;
 
-import ewm.Objects.Event;
-import ewm.Objects.EventRequest;
+import ewm.Entityes.Event;
+import ewm.Entityes.EventRequest;
 import ewm.Repositoryes.EventRequestsRepo;
 import ewm.Repositoryes.EventsRepo;
-import ewm.Utils.EntityNotFoundException;
+import ewm.Errors.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
