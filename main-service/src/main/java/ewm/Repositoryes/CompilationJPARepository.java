@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import java.util.List;
+import java.util.Optional;
 
 @RepositoryRestResource
 public interface CompilationJPARepository extends JpaRepository<Compilation, Long> {
@@ -16,4 +17,6 @@ public interface CompilationJPARepository extends JpaRepository<Compilation, Lon
 
     @Query("SELECT c FROM Compilation c")
     List<Compilation> findAllCompilationsWithPagination(@Param("size") int size, @Param("from") int from);
+
+    Optional<Compilation> findCompilationByTitle(String title);
 }

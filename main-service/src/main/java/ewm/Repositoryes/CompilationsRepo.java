@@ -21,6 +21,11 @@ public class CompilationsRepo {
         }
     }
 
+    public boolean checkUniqueTitle(String title) {
+        Compilation current = jpa.findCompilationByTitle(title).orElse(null);
+        return current == null;
+    }
+
     public Compilation getCurrent(Long id) {
         return jpa.findById(id).orElse(null);
     }

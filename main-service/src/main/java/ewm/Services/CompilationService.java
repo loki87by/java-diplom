@@ -1,6 +1,7 @@
 package ewm.Services;
 
 import ewm.Dtos.EventDto;
+import ewm.Errors.ConflictException;
 import ewm.Mappers.EventMapper;
 import ewm.Entityes.Compilation;
 import ewm.Entityes.CompilationRequest;
@@ -50,6 +51,10 @@ public class CompilationService {
     public Compilation setCompilation(boolean pinned,
                                       String title,
                                       List<Long> eventsIds) {
+
+        if (!repo.checkUniqueTitle(title)) {
+            throw new ConflictException("could not execute statement; SQL [n/a]; constraint [uq_compilation_name];");
+        }
         Compilation comp = repo.setEmptyCompilation(pinned, title);
 
         if (eventsIds == null || eventsIds.isEmpty()) {
@@ -59,8 +64,11 @@ public class CompilationService {
 
             for (Long id : eventsIds) {
                 Event event = eRepo.getEvent(id);
-                event.setCategoryId(comp.getId());
-                events.add(mapper.toObject(event));
+
+                if(event != null) {
+                    event.setCategoryId(comp.getId());
+                    events.add(mapper.toObject(event));
+                }
             }
             comp.setEvents(events);
             return comp;
@@ -83,6 +91,10 @@ public class CompilationService {
     }
 
     public Compilation changeCompilation(CompilationRequest comp, Long id) {
+
+        if (!repo.checkUniqueTitle(comp.getTitle())) {
+            throw new ConflictException("could not execute statement; SQL [n/a]; constraint [uq_compilation_name];");
+        }
         Compilation old = repo.getCurrent(id);
         old.setPinned(comp.getPinned());
         String title = comp.getTitle();
@@ -105,16 +117,18 @@ public class CompilationService {
         }
 
         for (Long currentId : eventIds) {
-            Event currEvent = events
+            List<Event> currEvents = events
                     .stream()
                     .filter(event -> event.getCompilationId().equals(currentId))
-                    .toList()
-                    .getFirst();
+                    .toList();
 
-            if(currEvent == null) {
-                currEvent = eRepo.getEvent(currentId);
-                currEvent.setCompilationId(id);
-                eRepo.setEvent(currEvent);
+            if(!currEvents.isEmpty()) {
+                Event currEvent = eRepo.getEvent(currentId);
+
+                if(currEvent != null) {
+                    currEvent.setCompilationId(id);
+                    eRepo.setEvent(currEvent);
+                }
             }
         }
         return repo.getCurrent(id);
