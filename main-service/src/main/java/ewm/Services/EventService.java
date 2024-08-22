@@ -45,6 +45,10 @@ public class EventService {
     }
 
     public FullEventDto getEvent(Long eventId) {
+
+        if(eRepo.getEvent(eventId) == null) {
+            throw new EntityNotFoundException("Event with id=" + eventId + " was not found");
+        }
         return mapper.toFullDto(eRepo.getEvent(eventId));
     }
 

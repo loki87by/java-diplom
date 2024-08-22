@@ -1,6 +1,7 @@
 package ewm.Services;
 
 import ewm.Entityes.User;
+import ewm.Errors.ConflictException;
 import ewm.Repositoryes.UserRepo;
 import ewm.Errors.EntityNotFoundException;
 import ewm.Errors.ValidationException;
@@ -29,7 +30,10 @@ public class UserService {
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             throw new ValidationException("Field: email. Error: must not be blank. Value: null");
         }
-        //ToDo: check email duplicates and return conflict
+
+        if (!repo.checkUniqueEmail(user.getEmail())) {
+         throw new ConflictException("could not execute statement; SQL [n/a]; constraint [uq_email];");
+        }
         return repo.addUser(user);
     }
 

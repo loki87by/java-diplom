@@ -22,7 +22,7 @@ public class PrivateEventsController {
     private final EventService service;
 
     //PRIVATE
-    @GetMapping("/")
+    @GetMapping("")
     public List<EventDto> getEvents(
             @RequestParam(defaultValue = "0") int from,
             @RequestParam(defaultValue = "10") int size,
@@ -75,7 +75,7 @@ public class PrivateEventsController {
         return service.updateEvent(userId, dto, eventId);
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public FullEventDto setEvent(
             @RequestBody newEventDto dto, @PathVariable Long userId) {
         return service.setEvent(userId, dto);

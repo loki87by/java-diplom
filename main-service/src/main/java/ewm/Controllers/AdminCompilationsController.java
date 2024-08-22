@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("admin/compilations")
+@RequestMapping("/admin/compilations")
 @RequiredArgsConstructor
 public class AdminCompilationsController {
     private final CompilationService service;
 
     //ADMIN
-    @PostMapping("/")
+    @PostMapping("")
     public Compilation setCompilation(@RequestBody CompilationRequest comp) {
         boolean pinned = comp.getPinned();
         String title = comp.getTitle();

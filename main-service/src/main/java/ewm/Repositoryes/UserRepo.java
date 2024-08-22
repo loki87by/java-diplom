@@ -29,6 +29,11 @@ public class UserRepo {
         }
     }
 
+    public boolean checkUniqueEmail(String email) {
+        User user = jpa.findUserByEmail(email).orElse(null);
+        return user == null;
+    }
+
     public User addUser(User user) {
         return jpa.saveAndFlush(user);
     }

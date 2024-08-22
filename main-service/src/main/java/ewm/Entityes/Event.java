@@ -36,7 +36,7 @@ public class Event {
     private String description;
     @Column(name = "location_id", nullable = false)
     private Long locationId;
-    @Column(name = "partipant_limit")
+    @Column(name = "participant_limit")
     private int participantLimit;
     @Column(name = "published_on")
     private Timestamp publishedOn;

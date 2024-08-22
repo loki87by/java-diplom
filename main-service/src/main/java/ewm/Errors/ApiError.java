@@ -14,5 +14,10 @@ public class ApiError {
     String timestamp;
 
     public ApiError(List<StackTraceElement> list, String message, String reason, HttpStatusCode statusCode, String ts) {
+        this.errors = list.stream().map(StackTraceElement::toString).toList();
+        this.message = message;
+        this.reason = reason;
+        this.status = statusCode;
+        this.timestamp = ts;
     }
 }

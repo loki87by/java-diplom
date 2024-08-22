@@ -1,5 +1,6 @@
 package ewm.Controllers;
 
+import ewm.Dtos.CategoryDto;
 import ewm.Entityes.Category;
 import ewm.Entityes.StringObject;
 import ewm.Services.CategoryService;
@@ -15,8 +16,7 @@ public class AdminCategoriesController {
     private final CategoryService service;
 
     //ADMIN
-    @PostMapping("/")
-    //ToDo: Обратите внимание: имя категории должно быть уникальным
+    @PostMapping("")
     public Category setCategory(@RequestHeader(value = "X-User-Id") Long userId,
                                 @RequestBody StringObject dto) {
         return service.setCategory(userId, dto);
@@ -24,13 +24,13 @@ public class AdminCategoriesController {
 
     @PatchMapping("/{catId}")
     public StringObject updateCategory(@RequestHeader(value = "X-User-Id") Long userId,
-                                       @RequestBody String name,
+                                       @RequestBody CategoryDto dto,
                                        @PathVariable Long catId) {
-        return service.updateCategory(userId, catId, name);
+        return service.updateCategory(userId, catId, dto.getName());
     }
 
     @DeleteMapping("/{catId}")
-    public ResponseEntity<Void> deleteCategory(@RequestHeader(value = "X-User-Id") Long userId,
+    public ResponseEntity<String> deleteCategory(@RequestHeader(value = "X-User-Id") Long userId,
                                                @PathVariable Long catId) {
 
         if (service.deleteCategory(userId, catId)){

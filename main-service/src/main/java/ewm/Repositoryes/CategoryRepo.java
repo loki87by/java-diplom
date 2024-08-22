@@ -1,6 +1,7 @@
 package ewm.Repositoryes;
 
 import ewm.Entityes.Category;
+import ewm.Errors.ConflictException;
 import ewm.Errors.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,16 @@ public class CategoryRepo {
     }
 
     public Category setCategory(Category category) {
+
+        if (!checkUniqueName(category.getName())) {
+            throw new ConflictException("duplicate name");
+        }
         return jpa.saveAndFlush(category);
+    }
+
+    public boolean checkUniqueName(String name) {
+        Category current = jpa.findCategoryByName(name).orElse(null);
+        return current == null;
     }
 
     public boolean deleteItem(Long id) {

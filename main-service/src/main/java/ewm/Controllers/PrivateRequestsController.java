@@ -16,12 +16,12 @@ public class PrivateRequestsController {
     private final RequestService service;
 
     //PRIVATE
-    @GetMapping("/")
+    @GetMapping("")
     public List<EventRequest> getRequests(
             @PathVariable Long userId) {
         return service.getRequests(userId);
     }
-    @PostMapping("/")
+    @PostMapping("")
     public EventRequest setRequest(
             @PathVariable Long userId,
             @RequestParam Long eventId) {

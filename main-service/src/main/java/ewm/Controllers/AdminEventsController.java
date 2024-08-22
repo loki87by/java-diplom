@@ -18,7 +18,7 @@ public class AdminEventsController {
     private final EventService service;
 
     //ADMIN
-    @GetMapping("/")
+    @GetMapping("")
     public List<FullEventDto> getEvents(
             @RequestParam(required = false) List<Long> users,
             @RequestParam(required = false) List<Long> categories,

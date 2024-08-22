@@ -16,7 +16,7 @@ public class EventsController {
     private final EventService service;
 
     //PUBLIC
-    @GetMapping("/")
+    @GetMapping("")
     //TODO: add to statistic
     public List<EventDto> getEvents(
             @RequestParam(required = false) String text,
@@ -38,7 +38,7 @@ public class EventsController {
                 from,
                 size);
     }
-
+//partipant_limit
     @GetMapping("/{id}")
     //TODO: add to statistic
     public FullEventDto getEvent(@PathVariable Long id) {

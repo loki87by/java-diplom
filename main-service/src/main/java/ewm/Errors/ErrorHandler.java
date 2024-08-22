@@ -4,18 +4,17 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-//import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.Arrays;
 
 @ControllerAdvice
-//@RestControllerAdvice
 public class ErrorHandler extends ResponseEntityExceptionHandler {
     Instant now = Instant.now();
-    String timestamp = now.toString();
+    String timestamp = Timestamp.from(now).toString();
 
     @ExceptionHandler(EntityNotFoundException.class)
     public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex, WebRequest request) {

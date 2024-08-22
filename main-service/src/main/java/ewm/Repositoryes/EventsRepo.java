@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @Repository
@@ -60,8 +61,14 @@ public class EventsRepo {
                                   String sort,
                                   int from,
                                   int size) {
-        Timestamp minTime = Timestamp.valueOf(rangeStart);
-        Timestamp maxTime = Timestamp.valueOf(rangeEnd);
+        Timestamp minTime;
+        if (rangeStart != null) {minTime= Timestamp.valueOf(rangeStart);} else {
+            minTime = Timestamp.from(Instant.now());
+        }
+        Timestamp maxTime;
+        if (rangeEnd != null) {maxTime= Timestamp.valueOf(rangeEnd);} else {
+            maxTime = null;
+        }
         Specification<Event> spec = esMapper.filterEvents(text,
                 catsIds,
                 paid,
