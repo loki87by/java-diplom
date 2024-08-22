@@ -21,6 +21,7 @@ public class EventsRepo {
     public List<Event> getEvents(Long id) {
         return jpa.findByCategoryId(id).orElse(null);
     }
+
     public List<Event> getById(Long userId, int size, int from) {
         Pageable pageable = PageRequest.of(from, size);
         return jpa.findAllByUserId(userId, pageable).getContent();
@@ -45,8 +46,24 @@ public class EventsRepo {
                                   String rangeEnd,
                                   int from,
                                   int size) {
-        Timestamp minTime = Timestamp.valueOf(rangeStart);
-        Timestamp maxTime = Timestamp.valueOf(rangeEnd);
+        Timestamp minTime = Timestamp.from(Instant.now());
+
+        if (rangeStart != null) {
+
+            if(rangeStart.length() <= 11) {
+                rangeStart = rangeStart.trim()+" 00:00:00";
+            }
+            minTime = Timestamp.valueOf(rangeStart);
+        }
+        Timestamp maxTime = null;
+
+        if (rangeEnd != null) {
+
+            if(rangeEnd.length() <= 11) {
+                rangeEnd = rangeEnd.trim()+" 23:59:59";
+            }
+            maxTime = Timestamp.valueOf(rangeEnd);
+        }
         Specification<Event> spec = esMapper.filterEvents(users, states, categories, minTime, maxTime);
         Pageable pageable = PageRequest.of(from, size);
         return jpa.findAll(spec, pageable);
@@ -62,11 +79,23 @@ public class EventsRepo {
                                   int from,
                                   int size) {
         Timestamp minTime;
-        if (rangeStart != null) {minTime= Timestamp.valueOf(rangeStart);} else {
+        if (rangeStart != null) {
+
+            if(rangeStart.length() <= 11) {
+                rangeStart = rangeStart.trim()+" 00:00:00";
+            }
+            minTime = Timestamp.valueOf(rangeStart);
+        } else {
             minTime = Timestamp.from(Instant.now());
         }
         Timestamp maxTime;
-        if (rangeEnd != null) {maxTime= Timestamp.valueOf(rangeEnd);} else {
+        if (rangeEnd != null) {
+
+            if(rangeEnd.length() <= 11) {
+                rangeEnd = rangeEnd.trim()+" 23:59:59";
+            }
+            maxTime = Timestamp.valueOf(rangeEnd);
+        } else {
             maxTime = null;
         }
         Specification<Event> spec = esMapper.filterEvents(text,

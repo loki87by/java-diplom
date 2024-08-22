@@ -14,7 +14,7 @@ public class LocationRepo {
             return jpa.findById(id).orElse(null);
     }
 
-    private Optional<Location> findByData(double lat, double lon) {
+    public Optional<Location> findByData(double lat, double lon) {
         return jpa.findLocationByLatAndLon(lat, lon);
     }
 

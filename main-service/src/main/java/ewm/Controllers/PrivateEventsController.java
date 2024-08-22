@@ -61,7 +61,7 @@ public class PrivateEventsController {
             @RequestBody FullEventDto dto, @PathVariable Long userId, @PathVariable Long eventId) {
         FullEventDto old = service.getEvent(userId, eventId);
         String state = old.getState();
-        Timestamp eventTime = dto.getEventDate();
+        Timestamp eventTime = Timestamp.valueOf(dto.getEventDate());
         long currentTimeMillis = System.currentTimeMillis();
         Timestamp minimalTime = new Timestamp(currentTimeMillis + 7200000);
 
@@ -78,6 +78,13 @@ public class PrivateEventsController {
     @PostMapping("")
     public FullEventDto setEvent(
             @RequestBody newEventDto dto, @PathVariable Long userId) {
+        Timestamp eventTime = Timestamp.valueOf(dto.getEventDate().toLocalDateTime());
+        long currentTimeMillis = System.currentTimeMillis();
+        Timestamp minimalTime = new Timestamp(currentTimeMillis + 7200000);
+
+        if (eventTime.before(minimalTime)) {
+            throw new ForbiddenException("Time need after now+2hrs");
+        }
         return service.setEvent(userId, dto);
     }
 

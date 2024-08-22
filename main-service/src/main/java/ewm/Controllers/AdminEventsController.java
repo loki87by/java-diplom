@@ -44,19 +44,19 @@ public class AdminEventsController {
         if (old == null) {
             throw new EntityNotFoundException("Event with id="+eventId+" was not found");
         }
-        Timestamp eventTime = old.getPublishedOn();
+        Timestamp eventTime = Timestamp.valueOf(old.getEventDate());
         long currentTimeMillis = System.currentTimeMillis();
         Timestamp minimalTime = new Timestamp(currentTimeMillis + 3600000);
 
         if (eventTime.before(minimalTime)) {
-            throw new ForbiddenException("Publication time need after now+1hrs");
+            throw new ForbiddenException("Event time need after now+1hrs");
         }
 
-        if (!old.getState().equals("PENDING") && data.getState().equals("PUBLISH_EVENT")) {
+        if (!old.getState().equals("PENDING") && data.getStateAction().equals("PUBLISH_EVENT")) {
             throw new ForbiddenException("Only pending events can`t be PUBLISH");
         }
 
-        if (!old.getState().equals("PUBLISH") && data.getState().equals("REJECT_EVENT")) {
+        if (!old.getState().equals("PUBLISH") && data.getStateAction().equals("REJECT_EVENT")) {
             throw new ForbiddenException("PUBLISHED events can`t be REJECT");
         }
         return service.updateAndApproveEvent(data, eventId);

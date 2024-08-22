@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 @Data
 public class newEventDto {
     private String annotation;
-    private Long categoryId;
+    private Long category;
     private String description;
     private Timestamp eventDate;
     private Location location;
@@ -16,24 +16,45 @@ public class newEventDto {
     private int participantLimit;
     private boolean requestModeration;
     private String title;
+    private Timestamp createdOn;
 
-    public newEventDto(String annotation,
+/*    public newEventDto(String annotation,
                        Long categoryId,
                        String description,
-                       Timestamp eventDate,
+                       String eventDate,
                        Location location,
                        Boolean paid,
                        int participantLimit,
                        boolean requestModeration,
                        String title) {
         this.annotation = annotation;
-        this.eventDate = eventDate;
+        this.eventDate = Timestamp.valueOf(eventDate);
         this.paid = paid;
         this.title = title;
         this.participantLimit = participantLimit;
-        this.categoryId = categoryId;
+        this.category = categoryId;
         this.location = location;
         this.description = description;
         this.requestModeration = requestModeration;
-    }
+        this.createdOn = Timestamp.from(Instant.now());
+    }*/
+/*
+    public newEventDto(String annotation,
+                       Long categoryId,
+                       String description,
+                       Location location,
+                       Boolean paid,
+                       int participantLimit,
+                       boolean requestModeration,
+                       String title) {
+        this.annotation = annotation;
+        this.paid = paid;
+        this.title = title;
+        this.participantLimit = participantLimit;
+        this.category = categoryId;
+        this.location = location;
+        this.description = description;
+        this.requestModeration = requestModeration;
+    }*/
+
 }

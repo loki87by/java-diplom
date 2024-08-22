@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS events (
     location_id BIGINT REFERENCES coordinates(id),
     participant_limit int,
     published_on TIMESTAMP,
-    state VARCHAR(255) default 'PUBLISHED',
+    state VARCHAR(255) default 'PENDING',
     request_moderation BOOLEAN
     );
 

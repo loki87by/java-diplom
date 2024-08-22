@@ -26,7 +26,7 @@ public class EventSpecificationsMapper {
                 predicate = criteriaBuilder.and(predicate, root.get("state").in(states));
             }
             if (catsIds != null && !catsIds.isEmpty()) {
-                predicate = criteriaBuilder.and(predicate, root.get("CategoryId").in(catsIds));
+                predicate = criteriaBuilder.and(predicate, root.get("categoryId").in(catsIds));
             }
 
             if (minTime != null) {

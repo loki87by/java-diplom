@@ -43,7 +43,7 @@ public class Event {
     @Column(name = "request_moderation")
     private boolean requestModeration;
     @Column(name = "state")
-    private String state = "PUBLISHED";
+    private String state = "PENDING";
 
     public Event(Event event) {
         this.id = event.getId();
