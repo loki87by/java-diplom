@@ -3,20 +3,18 @@ package ewm.Dtos;
 import ewm.Entityes.Location;
 import lombok.Data;
 
-import java.sql.Timestamp;
-
 @Data
 public class newEventDto {
     private String annotation;
     private Long category;
     private String description;
-    private Timestamp eventDate;
+    private String eventDate;
     private Location location;
     private Boolean paid;
     private int participantLimit;
     private boolean requestModeration;
     private String title;
-    private Timestamp createdOn;
+    private String createdOn;
 
 /*    public newEventDto(String annotation,
                        Long categoryId,
@@ -28,7 +26,7 @@ public class newEventDto {
                        boolean requestModeration,
                        String title) {
         this.annotation = annotation;
-        this.eventDate = Timestamp.valueOf(eventDate);
+        this.eventDate = String.valueOf(eventDate);
         this.paid = paid;
         this.title = title;
         this.participantLimit = participantLimit;
@@ -36,7 +34,7 @@ public class newEventDto {
         this.location = location;
         this.description = description;
         this.requestModeration = requestModeration;
-        this.createdOn = Timestamp.from(Instant.now());
+        this.createdOn = String.from(Instant.now());
     }*/
 /*
     public newEventDto(String annotation,

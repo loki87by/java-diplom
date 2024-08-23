@@ -3,6 +3,7 @@ package ewm.Repositoryes;
 import ewm.Entityes.Compilation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class CompilationsRepo {
         return jpa.findById(id).orElse(null);
     }
 
+    @Transactional
     public Compilation setEmptyCompilation(boolean pinned, String title) {
         Compilation comp = new Compilation();
         comp.setPinned(pinned);

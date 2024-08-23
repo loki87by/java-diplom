@@ -4,6 +4,8 @@ import ewm.Entityes.Category;
 import ewm.Errors.ConflictException;
 import ewm.Errors.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -45,7 +47,8 @@ public class CategoryRepo {
     }
 
     public List<Category> getCategories(int from, int size) {
-        return jpa.findAllWithPagination(from, size);
+        Pageable page = PageRequest.of(from, size);
+        return jpa.findAllWithPagination(page);
     }
 
     public Category getCategory(Long id) {

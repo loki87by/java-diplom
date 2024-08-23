@@ -2,6 +2,7 @@ package ewm.Controllers;
 
 import ewm.Entityes.Compilation;
 import ewm.Services.CompilationService;
+import ewm.main_service.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CompilationsController {
     private final CompilationService service;
+    private final Utils utils;
 
     //PUBLIC
     @GetMapping("")
@@ -22,8 +24,8 @@ public class CompilationsController {
     }
 
     @GetMapping("/{compId}")
-    public Compilation getCurrent(@PathVariable Long compId) {
-        //ToDo: check type of id and return exception
-        return service.getCurrent(compId);
+    public Compilation getCurrent(@PathVariable Object compId) {
+        Long id = utils.idValidation(compId);
+        return service.getCurrent(id);
     }
 }

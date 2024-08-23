@@ -12,6 +12,7 @@ import ewm.Errors.EntityNotFoundException;
 import ewm.Errors.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,38 +49,27 @@ public class CompilationService {
         return comps;
     }
 
+    @Transactional
     public Compilation setCompilation(boolean pinned,
-                                      String title,
-                                      List<Long> eventsIds) {
+                                      String title) {
+        return repo.setEmptyCompilation(pinned, title);
+    }
 
-        if (!repo.checkUniqueTitle(title)) {
-            throw new ConflictException("could not execute statement; SQL [n/a]; constraint [uq_compilation_name];");
+    public Event insertToEvent(Long eId, Long cId) {
+        Event event = eRepo.getEvent(eId);
+
+        if (event != null) {
+            event.setCategoryId(cId);
+            eRepo.setEvent(event);
         }
-        Compilation comp = repo.setEmptyCompilation(pinned, title);
-
-        if (eventsIds == null || eventsIds.isEmpty()) {
-            return comp;
-        } else {
-            List<EventDto> events = new ArrayList<>();
-
-            for (Long id : eventsIds) {
-                Event event = eRepo.getEvent(id);
-
-                if(event != null) {
-                    event.setCategoryId(comp.getId());
-                    events.add(mapper.toObject(event));
-                }
-            }
-            comp.setEvents(events);
-            return comp;
-        }
+        return event;
     }
 
     public Compilation getCurrent(Long id) {
         Compilation comp = repo.getCurrent(id);
 
         if (comp == null) {
-            throw new EntityNotFoundException("Compilation with id="+id+" was not found");
+            throw new EntityNotFoundException("Compilation with id=" + id + " was not found");
         }
         List<EventDto> events = getEvents(comp.getId());
         comp.setEvents(events);
@@ -122,10 +112,10 @@ public class CompilationService {
                     .filter(event -> event.getCompilationId().equals(currentId))
                     .toList();
 
-            if(!currEvents.isEmpty()) {
+            if (!currEvents.isEmpty()) {
                 Event currEvent = eRepo.getEvent(currentId);
 
-                if(currEvent != null) {
+                if (currEvent != null) {
                     currEvent.setCompilationId(id);
                     eRepo.setEvent(currEvent);
                 }

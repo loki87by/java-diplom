@@ -41,7 +41,7 @@ public class EventMapper {
         event.setAnnotation(dto.getAnnotation());
         event.setCategoryId(dto.getCategory());
         event.setDescription(dto.getDescription());
-        event.setEventDate(dto.getEventDate());
+        event.setEventDate(Timestamp.valueOf(dto.getEventDate()));
         event.setLocationId(location.getId());
         event.setPaid(dto.getPaid());
         event.setParticipantLimit(dto.getParticipantLimit());
@@ -56,7 +56,7 @@ public class EventMapper {
         Location location = locationRepo.findByData(dto.getLocation().getLat(), dto.getLocation().getLon()).orElse(null);
         Long locationId = null;
 
-        if(location != null) {
+        if (location != null) {
             locationId = location.getId();
         }
         Event event = new Event();

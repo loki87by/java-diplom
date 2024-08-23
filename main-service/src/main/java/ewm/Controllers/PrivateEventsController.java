@@ -9,6 +9,7 @@ import ewm.Entityes.RequestConfirmResponse;
 import ewm.Services.EventService;
 import ewm.Errors.ConflictException;
 import ewm.Errors.ForbiddenException;
+import ewm.main_service.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,46 +21,55 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PrivateEventsController {
     private final EventService service;
+    private final Utils utils;
 
     //PRIVATE
     @GetMapping("")
     public List<EventDto> getEvents(
             @RequestParam(defaultValue = "0") int from,
             @RequestParam(defaultValue = "10") int size,
-            @PathVariable Long userId) {
-        return service.getEvents(userId, from, size);
+            @PathVariable Object userId) {
+        Long id = utils.idValidation(userId);
+        return service.getEvents(id, from, size);
     }
 
     @GetMapping("/{eventId}")
     public FullEventDto getEvent(
-            @PathVariable Long userId, @PathVariable Long eventId) {
-        //ToDo: check type and return exception
-        return service.getEvent(userId, eventId);
+            @PathVariable Object userId, @PathVariable Object eventId) {
+        Long uId = utils.idValidation(userId);
+        Long eId = utils.idValidation(eventId);
+        return service.getEvent(uId, eId);
     }
 
     @GetMapping("/{eventId}/requests")
     public EventRequest getEventRequest(
-            @PathVariable Long userId, @PathVariable Long eventId) {
-        return service.getRequest(userId, eventId);
+            @PathVariable Object userId, @PathVariable Object eventId) {
+        Long uId = utils.idValidation(userId);
+        Long eId = utils.idValidation(eventId);
+        return service.getRequest(uId, eId);
     }
 
     @PatchMapping("/{eventId}/requests")
     public RequestConfirmResponse confirmEventRequest(
-            @PathVariable Long userId, @PathVariable Long eventId, @RequestBody RequestConfirmBody body) {
-        FullEventDto event = service.getEvent(userId, eventId);
+            @PathVariable Object userId, @PathVariable Object eventId, @RequestBody RequestConfirmBody body) {
+        Long uId = utils.idValidation(userId);
+        Long eId = utils.idValidation(eventId);
+        FullEventDto event = service.getEvent(uId, eId);
         int limit = event.getParticipantLimit();
         int confirmedCount = event.getConfirmedRequests();
 
         if (confirmedCount >= limit) {
             throw new ConflictException("The participant limit has been reached");
         }
-        return service.confirmEventRequest(userId, eventId, body);
+        return service.confirmEventRequest(uId, eId, body);
     }
 
     @PatchMapping("/{eventId}")
     public FullEventDto updateEvent(
-            @RequestBody FullEventDto dto, @PathVariable Long userId, @PathVariable Long eventId) {
-        FullEventDto old = service.getEvent(userId, eventId);
+            @RequestBody FullEventDto dto, @PathVariable Object userId, @PathVariable Object eventId) {
+        Long uId = utils.idValidation(userId);
+        Long eId = utils.idValidation(eventId);
+        FullEventDto old = service.getEvent(uId, eId);
         String state = old.getState();
         Timestamp eventTime = Timestamp.valueOf(dto.getEventDate());
         long currentTimeMillis = System.currentTimeMillis();
@@ -72,20 +82,21 @@ public class PrivateEventsController {
         if (eventTime.before(minimalTime)) {
             throw new ForbiddenException("Time need after now+2hrs");
         }
-        return service.updateEvent(userId, dto, eventId);
+        return service.updateEvent(uId, dto, eId);
     }
 
     @PostMapping("")
     public FullEventDto setEvent(
-            @RequestBody newEventDto dto, @PathVariable Long userId) {
-        Timestamp eventTime = Timestamp.valueOf(dto.getEventDate().toLocalDateTime());
+            @RequestBody newEventDto dto, @PathVariable Object userId) {
+        Long uId = utils.idValidation(userId);
+        Timestamp eventTime = Timestamp.valueOf(dto.getEventDate());
         long currentTimeMillis = System.currentTimeMillis();
         Timestamp minimalTime = new Timestamp(currentTimeMillis + 7200000);
 
         if (eventTime.before(minimalTime)) {
             throw new ForbiddenException("Time need after now+2hrs");
         }
-        return service.setEvent(userId, dto);
+        return service.setEvent(uId, dto);
     }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:application.properties")
 @Configuration
 @EnableTransactionManagement
+@EnableAspectJAutoProxy
 @ComponentScan(basePackages = {"ewm"})
 @EnableJpaRepositories(basePackages = {"ewm.Repositoryes"})
 @EntityScan(basePackages = {"ewm.Entityes", "ewm.Dtos"})
