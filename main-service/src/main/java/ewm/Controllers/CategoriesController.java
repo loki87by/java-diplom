@@ -2,10 +2,11 @@ package ewm.Controllers;
 
 import ewm.Entityes.Category;
 import ewm.Services.CategoryService;
-
 import ewm.Errors.EntityNotFoundException;
 import ewm.main_service.Utils;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,6 +1,7 @@
 package ewm.Services;
 
-import ewm.Dtos.EventDto;
+import ewm.Dtos.EventCompDto;
+import ewm.Entityes.CompilationEvents;
 import ewm.Errors.ConflictException;
 import ewm.Mappers.EventMapper;
 import ewm.Entityes.Compilation;
@@ -10,7 +11,9 @@ import ewm.Repositoryes.CompilationsRepo;
 import ewm.Repositoryes.EventsRepo;
 import ewm.Errors.EntityNotFoundException;
 import ewm.Errors.ForbiddenException;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,13 +27,13 @@ public class CompilationService {
     private final EventsRepo eRepo;
     private final EventMapper mapper;
 
-    private List<EventDto> getEvents(Long compilationId) {
-        List<EventDto> events = new ArrayList<>();
+    private List<EventCompDto> getEvents(Long compilationId) {
+        List<EventCompDto> events = new ArrayList<>();
         List<Event> eventsFromDb = eRepo.getEvents(compilationId);
 
         if (eventsFromDb != null) {
             for (Event event : eventsFromDb) {
-                events.add(mapper.toObject(event));
+                events.add(mapper.toEventCompDto(event));
             }
         }
         return events;
@@ -42,7 +45,7 @@ public class CompilationService {
         List<Compilation> comps = new ArrayList<>();
 
         for (Compilation compilation : repo.getCompilations(pinned, from, size)) {
-            List<EventDto> events = getEvents(compilation.getId());
+            List<EventCompDto> events = getEvents(compilation.getId());
             compilation.setEvents(events);
             comps.add(compilation);
         }
@@ -55,14 +58,9 @@ public class CompilationService {
         return repo.setEmptyCompilation(pinned, title);
     }
 
-    public Event insertToEvent(Long eId, Long cId) {
-        Event event = eRepo.getEvent(eId);
-
-        if (event != null) {
-            event.setCategoryId(cId);
-            eRepo.setEvent(event);
-        }
-        return event;
+    public void setCompilationEvent(Long eId, Long cId) {
+        CompilationEvents cEvent = new CompilationEvents(eId, cId);
+        repo.setCompilationEvent(cEvent);
     }
 
     public Compilation getCurrent(Long id) {
@@ -71,7 +69,7 @@ public class CompilationService {
         if (comp == null) {
             throw new EntityNotFoundException("Compilation with id=" + id + " was not found");
         }
-        List<EventDto> events = getEvents(comp.getId());
+        List<EventCompDto> events = getEvents(comp.getId());
         comp.setEvents(events);
         return comp;
     }
@@ -82,7 +80,7 @@ public class CompilationService {
 
     public Compilation changeCompilation(CompilationRequest comp, Long id) {
 
-        if (!repo.checkUniqueTitle(comp.getTitle())) {
+        if (!repo.checkUniqueTitle(comp.getTitle(), id)) {
             throw new ConflictException("could not execute statement; SQL [n/a]; constraint [uq_compilation_name];");
         }
         Compilation old = repo.getCurrent(id);
@@ -95,32 +93,39 @@ public class CompilationService {
             throw new ForbiddenException("field title was not been empty");
         }
         List<Long> eventIds = comp.getEvents();
-        List<Event> events = eRepo.findAllByCategoryId(id);
+        List<CompilationEvents> cEvents = repo.getCompilationEvents(id);
 
-        for (Event event : events) {
-            Long eventId = event.getId();
+        for (CompilationEvents cEvent : cEvents) {
+            Long eventId = cEvent.getEventId();
 
             if (!eventIds.contains(eventId)) {
-                event.setCategoryId(null);
-                eRepo.setEvent(event);
+                Long ceId = cEvent.getId();
+                repo.removeCompilationEvents(ceId);
             }
         }
+        List<EventCompDto> currentEvents = new ArrayList<>();
 
         for (Long currentId : eventIds) {
-            List<Event> currEvents = events
+            List<CompilationEvents> currEvents = cEvents
                     .stream()
-                    .filter(event -> event.getCompilationId().equals(currentId))
+                    .filter(event -> {
+                        Long evId = event.getEventId();
+                        return evId != null && evId.equals(currentId);
+                    })
                     .toList();
 
-            if (!currEvents.isEmpty()) {
+            if (currEvents.isEmpty()) {
                 Event currEvent = eRepo.getEvent(currentId);
 
                 if (currEvent != null) {
-                    currEvent.setCompilationId(id);
-                    eRepo.setEvent(currEvent);
+                    Long curId = currEvent.getId();
+                    CompilationEvents evnt = new CompilationEvents(curId, id);
+                    repo.setCompilationEvent(evnt);
                 }
             }
+            currentEvents.add(mapper.toEventCompDto(eRepo.getEvent(currentId)));
         }
+        old.setEvents(currentEvents);
         return repo.getCurrent(id);
     }
 }

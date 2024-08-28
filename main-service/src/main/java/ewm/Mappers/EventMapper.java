@@ -1,15 +1,15 @@
 package ewm.Mappers;
 
-import ewm.Dtos.EventDto;
-import ewm.Dtos.FullEventDto;
-import ewm.Dtos.UserDto;
-import ewm.Dtos.newEventDto;
+import ewm.Dtos.*;
 import ewm.Entityes.*;
 import ewm.Repositoryes.CategoryRepo;
 import ewm.Repositoryes.EventsRepo;
 import ewm.Repositoryes.LocationRepo;
 import ewm.Repositoryes.UserRepo;
+import ewm.main_service.Utils;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -21,6 +21,7 @@ public class EventMapper {
     private final UserRepo userRepo;
     private final LocationRepo locationRepo;
     private final EventsRepo eRepo;
+    private final Utils utils;
 
     public EventDto toObject(Event event) {
         return new EventDto(
@@ -41,7 +42,7 @@ public class EventMapper {
         event.setAnnotation(dto.getAnnotation());
         event.setCategoryId(dto.getCategory());
         event.setDescription(dto.getDescription());
-        event.setEventDate(Timestamp.valueOf(dto.getEventDate()));
+        event.setEventDate(utils.stringToTimestamp(dto.getEventDate(), false));
         event.setLocationId(location.getId());
         event.setPaid(dto.getPaid());
         event.setParticipantLimit(dto.getParticipantLimit());
@@ -64,13 +65,13 @@ public class EventMapper {
         event.setAnnotation(dto.getAnnotation());
         event.setCategoryId(dto.getCategory().getId());
         event.setConfirmedRequests(dto.getConfirmedRequests());
-        event.setEventDate(Timestamp.valueOf(dto.getEventDate()));
+        event.setEventDate(utils.stringToTimestamp(dto.getEventDate(), false));
         event.setUserId(userId);
         event.setPaid(dto.getPaid());
         event.setTitle(dto.getTitle());
         event.setViews(dto.getViews());
         event.setCompilationId(compilationId);
-        event.setCreatedOn(Timestamp.valueOf(dto.getCreatedOn()));
+        event.setCreatedOn(utils.stringToTimestamp(dto.getEventDate(), false));
         event.setDescription(dto.getDescription());
         event.setLocationId(locationId);
         event.setParticipantLimit(dto.getParticipantLimit());
@@ -103,5 +104,36 @@ public class EventMapper {
                 event.isRequestModeration(),
                 event.getState()
         );
+    }
+
+    public EventCompDto toEventCompDto(FullEventDto data) {
+        EventCompDto result = new EventCompDto();
+        result.setAnnotation(data.getAnnotation());
+        result.setCategory(data.getCategory());
+        result.setConfirmedRequests(data.getConfirmedRequests());
+        result.setEventDate(data.getEventDate());
+        result.setId(data.getId());
+        result.setInitiator(data.getInitiator());
+        result.setPaid(data.getPaid());
+        result.setTitle(data.getTitle());
+        result.setViews(data.getViews());
+        return result;
+    }
+
+    public EventCompDto toEventCompDto(Event event) {
+        Category category = categoryRepo.findById(event.getCategoryId());
+        EventCompDto result = new EventCompDto();
+        User user = userRepo.findById(event.getUserId());
+        UserDto userDto = new UserDto(user.getId(), user.getName());
+        result.setAnnotation(event.getAnnotation());
+        result.setCategory(category);
+        result.setConfirmedRequests(event.getConfirmedRequests());
+        result.setEventDate(String.valueOf(event.getEventDate()).replace("T", " "));
+        result.setId(event.getId());
+        result.setInitiator(userDto);
+        result.setPaid(event.getPaid());
+        result.setTitle(event.getTitle());
+        result.setViews(event.getViews());
+        return result;
     }
 }

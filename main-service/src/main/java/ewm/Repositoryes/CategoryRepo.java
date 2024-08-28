@@ -3,7 +3,9 @@ package ewm.Repositoryes;
 import ewm.Entityes.Category;
 import ewm.Errors.ConflictException;
 import ewm.Errors.EntityNotFoundException;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -14,8 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryRepo {
     private final CategoryJPARepository jpa;
+
     public Category findById(Long id) {
-            return jpa.findById(id).orElse(null);
+        return id != null ? jpa.findById(id).orElse(null) : null;
     }
 
     public Category setCategory(Category category) {
@@ -34,8 +37,8 @@ public class CategoryRepo {
     public boolean deleteItem(Long id) {
         Category current = findById(id);
 
-        if(current == null) {
-            throw new EntityNotFoundException("Category with id="+id+" was not found");
+        if (current == null) {
+            throw new EntityNotFoundException("Category with id=" + id + " was not found");
         }
         try {
             jpa.deleteById(id);

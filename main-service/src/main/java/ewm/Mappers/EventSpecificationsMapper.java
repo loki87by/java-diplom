@@ -1,14 +1,14 @@
 package ewm.Mappers;
 
 import ewm.Entityes.Event;
+
 import jakarta.persistence.criteria.Predicate;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 
 @Component
 public class EventSpecificationsMapper {
@@ -19,21 +19,27 @@ public class EventSpecificationsMapper {
                                              Timestamp maxTime) {
         return (root, query, criteriaBuilder) -> {
             Predicate predicate = criteriaBuilder.conjunction();
+
             if (userIds != null && !userIds.isEmpty()) {
                 predicate = criteriaBuilder.and(predicate, root.get("userId").in(userIds));
             }
+
             if (states != null && !states.isEmpty()) {
                 predicate = criteriaBuilder.and(predicate, root.get("state").in(states));
             }
+
             if (catsIds != null && !catsIds.isEmpty()) {
                 predicate = criteriaBuilder.and(predicate, root.get("categoryId").in(catsIds));
             }
 
             if (minTime != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.greaterThanOrEqualTo(root.get("eventDate"), minTime));
+                predicate = criteriaBuilder.and(predicate,
+                        criteriaBuilder.greaterThanOrEqualTo(root.get("eventDate"), minTime));
             }
+
             if (maxTime != null) {
-                predicate = criteriaBuilder.and(predicate, criteriaBuilder.lessThanOrEqualTo(root.get("eventDate"), maxTime));
+                predicate = criteriaBuilder.and(predicate,
+                        criteriaBuilder.lessThanOrEqualTo(root.get("eventDate"), maxTime));
             }
             return predicate;
         };
@@ -69,8 +75,8 @@ public class EventSpecificationsMapper {
             }
 
             predicate = criteriaBuilder.and(predicate,
-                    criteriaBuilder.greaterThanOrEqualTo(root.get("eventDate"),
-                            Objects.requireNonNullElseGet(minTime, () -> Timestamp.from(Instant.now()))));
+                    criteriaBuilder
+                            .greaterThanOrEqualTo(root.get("eventDate"), minTime));
 
             if (maxTime != null) {
                 predicate = criteriaBuilder.and(predicate,
@@ -80,19 +86,17 @@ public class EventSpecificationsMapper {
             if (onlyAvailable != null && onlyAvailable) {
                 predicate = criteriaBuilder.and(predicate,
                         criteriaBuilder.lessThan(root.get("confirmedRequests"), root.get("participantLimit")));
-            } else {
-                predicate = criteriaBuilder.and(predicate,
-                        criteriaBuilder.greaterThanOrEqualTo(root.get("confirmedRequests"),
-                                root.get("participantLimit")));
             }
 
             if (sort != null && !sort.isEmpty()) {
+
                 if (sort.equals("EVENT_DATE")) {
                     query.orderBy(criteriaBuilder.asc(root.get("eventDate")));
                 } else if (sort.equals("VIEWS")) {
                     query.orderBy(criteriaBuilder.asc(root.get("views")));
                 }
             }
+
             return predicate;
         };
     }

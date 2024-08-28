@@ -30,12 +30,13 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         HttpHeaders headers = new HttpHeaders();
         return handleExceptionInternal(ex, apiError, headers, ex.getStatus(), request);
     }
+
     @ExceptionHandler(SQLException.class)
     public ResponseEntity<Object> handleSQLException(SQLException ex, WebRequest request) {
         ApiError apiError = new ApiError(
                 Arrays.stream(ex.getStackTrace()).toList(),
                 ex.getMessage(),
-                "SQL Error: "+ex.getSQLState(),
+                "SQL Error: " + ex.getSQLState(),
                 HttpStatusCode.valueOf(403),
                 timestamp
         );
@@ -52,7 +53,7 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
                 ex.getStatus(),
                 timestamp
         );
-            HttpHeaders headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         return handleExceptionInternal(ex, apiError, headers, ex.getStatus(), request);
     }
 

@@ -1,7 +1,9 @@
 package ewm.Repositoryes;
 
 import ewm.Entityes.User;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -14,7 +16,7 @@ public class UserRepo {
     private final UserJPARepository jpa;
 
     public User findById(Long id) {
-            return jpa.findById(id).orElse(null);
+        return jpa.findById(id).orElse(null);
     }
 
     public List<User> getUsers(List<Long> ids,

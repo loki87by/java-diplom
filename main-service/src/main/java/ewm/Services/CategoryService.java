@@ -5,11 +5,14 @@ import ewm.Entityes.Event;
 import ewm.Entityes.StringObject;
 import ewm.Entityes.User;
 import ewm.Errors.ConflictException;
+import ewm.Errors.EntityNotFoundException;
 import ewm.Repositoryes.CategoryRepo;
 import ewm.Repositoryes.EventsRepo;
 import ewm.Repositoryes.UserRepo;
 import ewm.Errors.ValidationException;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +30,7 @@ public class CategoryService {
     }
 
     public Category setCategory(Long userId, StringObject data) {
+
         if (!checkAdmin(userId)) {
             throw new ValidationException("not admin");
         } else {
@@ -42,6 +46,10 @@ public class CategoryService {
             throw new ValidationException("not admin");
         } else {
             Category category = categoryRepo.findById(catId);
+
+            if (category == null) {
+                throw new EntityNotFoundException("Категории с id=" + catId + " не найдено.");
+            }
 
             if (!categoryRepo.checkUniqueName(name)) {
                 throw new ConflictException("could not execute statement; SQL [n/a]; constraint [uq_category_name];");
@@ -68,8 +76,8 @@ public class CategoryService {
         }
     }
 
-    public List<Category> getCategories (int from,
-                                         int size) {
+    public List<Category> getCategories(int from,
+                                        int size) {
         return categoryRepo.getCategories(from, size);
     }
 

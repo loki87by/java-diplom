@@ -5,10 +5,11 @@ import ewm.Dtos.FullEventDto;
 import ewm.Services.EventService;
 import ewm.Errors.EntityNotFoundException;
 import ewm.main_service.Utils;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -31,10 +32,10 @@ public class EventsController {
             @RequestParam(required = false) String sort,
             @RequestParam(defaultValue = "0") int from,
             @RequestParam(defaultValue = "10") int size) {
-        List<Long> catIds = new ArrayList<>();
-        for (Object cat : cats) {
-            Long id = utils.idValidation(cat);
-            catIds.add(id);
+        List<Long> catIds = null;
+
+        if (cats != null && !cats.isEmpty()) {
+            catIds = utils.massValidate(cats);
         }
         return service.getEventsByParams(text,
                 catIds,

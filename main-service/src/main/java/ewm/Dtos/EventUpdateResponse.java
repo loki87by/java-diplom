@@ -1,6 +1,8 @@
 package ewm.Dtos;
 
 import ewm.Entityes.Location;
+import ewm.main_service.Utils;
+
 import lombok.Getter;
 
 import java.sql.Timestamp;
@@ -19,16 +21,16 @@ public class EventUpdateResponse {
     private final String title;
 
     public EventUpdateResponse(
-        String annotation,
-        int category,
-        String description,
-        String eventDate,
-        Location location,
-        Boolean paid,
-        int participantLimit,
-        boolean requestModeration,
-        String stateAction,
-        String title) {
+            String annotation,
+            int category,
+            String description,
+            String eventDate,
+            Location location,
+            Boolean paid,
+            int participantLimit,
+            boolean requestModeration,
+            String stateAction,
+            String title) {
         this.categoryId = Long.parseLong(String.valueOf(category));
         this.location = location;
         this.participantLimit = participantLimit;
@@ -38,6 +40,6 @@ public class EventUpdateResponse {
         this.description = description;
         this.annotation = annotation;
         this.stateAction = stateAction;
-        this.eventDate = Timestamp.valueOf(eventDate);
+        this.eventDate = new Utils().stringToTimestamp(eventDate, false);
     }
 }

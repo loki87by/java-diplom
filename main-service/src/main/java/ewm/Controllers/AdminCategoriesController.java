@@ -6,8 +6,10 @@ import ewm.Entityes.StringObject;
 import ewm.Services.CategoryService;
 import ewm.Errors.InternalServerErrorException;
 import ewm.main_service.Utils;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +21,7 @@ public class AdminCategoriesController {
 
     //ADMIN
     @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
     public Category setCategory(@RequestHeader(value = "X-User-Id") Object userId,
                                 @RequestBody StringObject dto) {
         Long id = utils.idValidation(userId);
@@ -35,13 +38,14 @@ public class AdminCategoriesController {
     }
 
     @DeleteMapping("/{catId}")
-    public ResponseEntity<String> deleteCategory(@RequestHeader(value = "X-User-Id") Object userId,
-                                               @PathVariable Object catId) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public String deleteCategory(@RequestHeader(value = "X-User-Id") Object userId,
+                                 @PathVariable Object catId) {
         Long uId = utils.idValidation(userId);
         Long cId = utils.idValidation(catId);
 
-        if (service.deleteCategory(uId, cId)){
-            return ResponseEntity.noContent().build();
+        if (service.deleteCategory(uId, cId)) {
+            return "Категория удалена";
         } else {
             throw new InternalServerErrorException("Failed to delete item");
         }

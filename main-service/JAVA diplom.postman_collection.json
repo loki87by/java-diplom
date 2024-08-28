@@ -33,17 +33,17 @@
 											"query": [
 												{
 													"key": "pinned",
-													"value": "bool",
+													"value": "false",
 													"disabled": true
 												},
 												{
 													"key": "from",
-													"value": "0",
+													"value": "1",
 													"disabled": true
 												},
 												{
 													"key": "size",
-													"value": "0",
+													"value": "1",
 													"disabled": true
 												}
 											]
@@ -83,12 +83,12 @@
 											"query": [
 												{
 													"key": "from",
-													"value": "0",
+													"value": "1",
 													"disabled": true
 												},
 												{
 													"key": "size",
-													"value": "0",
+													"value": "1",
 													"disabled": true
 												}
 											]
@@ -138,12 +138,12 @@
 												},
 												{
 													"key": "categories",
-													"value": "[categoriesIds]",
+													"value": "2, 4",
 													"disabled": true
 												},
 												{
 													"key": "rangeStart",
-													"value": "time",
+													"value": "2024-08-30",
 													"disabled": true
 												},
 												{
@@ -153,22 +153,22 @@
 												},
 												{
 													"key": "text",
-													"value": "text",
+													"value": "сапсан",
 													"disabled": true
 												},
 												{
 													"key": "paid",
-													"value": "boolean",
-													"disabled": true
-												},
-												{
-													"key": "onlyAvailable",
 													"value": "false",
 													"disabled": true
 												},
 												{
+													"key": "onlyAvailable",
+													"value": "true",
+													"disabled": true
+												},
+												{
 													"key": "sort",
-													"value": "views/event_date",
+													"value": "EVENT_DATE",
 													"disabled": true
 												}
 											]
@@ -199,7 +199,13 @@
 									"name": "Добавление категории",
 									"request": {
 										"method": "POST",
-										"header": [],
+										"header": [
+											{
+												"key": "X-User-Id",
+												"value": "{{userId}}",
+												"type": "text"
+											}
+										],
 										"body": {
 											"mode": "raw",
 											"raw": "{\r\n  \"name\": \"Концерты\"\r\n}",
@@ -217,7 +223,13 @@
 									"name": "Удаление категории",
 									"request": {
 										"method": "DELETE",
-										"header": [],
+										"header": [
+											{
+												"key": "X-User-Id",
+												"value": "{{userId}}",
+												"type": "text"
+											}
+										],
 										"url": "http://localhost:8080/admin/categories/{{catId}}"
 									},
 									"response": []
@@ -226,7 +238,13 @@
 									"name": "Изменение категории",
 									"request": {
 										"method": "PATCH",
-										"header": [],
+										"header": [
+											{
+												"key": "X-User-Id",
+												"value": "{{userId}}",
+												"type": "text"
+											}
+										],
 										"body": {
 											"mode": "raw",
 											"raw": "{\r\n  \"name\": \"Концерты\"\r\n}",
@@ -249,7 +267,13 @@
 									"name": "Поиск событий",
 									"request": {
 										"method": "GET",
-										"header": [],
+										"header": [
+											{
+												"key": "X-User-Id",
+												"value": "{{userId}}",
+												"type": "text"
+											}
+										],
 										"url": {
 											"raw": "http://localhost:8080/admin/events",
 											"protocol": "http",
@@ -264,37 +288,37 @@
 											"query": [
 												{
 													"key": "from",
-													"value": "0",
+													"value": "",
 													"disabled": true
 												},
 												{
 													"key": "size",
-													"value": "0",
+													"value": "",
 													"disabled": true
 												},
 												{
 													"key": "users",
-													"value": "[ids]",
+													"value": "4",
 													"disabled": true
 												},
 												{
 													"key": "states",
-													"value": "[states]",
+													"value": "PUBLISHED",
 													"disabled": true
 												},
 												{
 													"key": "categories",
-													"value": "[categoriesIds]",
+													"value": "3, 2",
 													"disabled": true
 												},
 												{
 													"key": "rangeStart",
-													"value": "time",
+													"value": "2024-12-30 ",
 													"disabled": true
 												},
 												{
 													"key": "rangeEnd",
-													"value": "time",
+													"value": "2024-12-30",
 													"disabled": true
 												}
 											]
@@ -306,10 +330,16 @@
 									"name": "Правка и статус",
 									"request": {
 										"method": "PATCH",
-										"header": [],
+										"header": [
+											{
+												"key": "X-User-Id",
+												"value": "{{userId}}",
+												"type": "text"
+											}
+										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n  \"annotation\": \"Сап прогулки по рекам и каналам – это возможность увидеть Практикбург с другого ракурса\",\r\n  \"category\": 3,\r\n  \"description\": \"От английского SUP - Stand Up Paddle — \\\"стоя на доске с веслом\\\", гавайская разновидность сёрфинга, в котором серфер, стоя на доске, катается на волнах и при этом гребет веслом, а не руками, как в классическом серфинге.\",\r\n  \"eventDate\": \"2023-10-11 23:10:05\",\r\n  \"location\": {\r\n    \"lat\": 55.754167,\r\n    \"lon\": 37.62\r\n  },\r\n  \"paid\": true,\r\n  \"participantLimit\": 7,\r\n  \"requestModeration\": false,\r\n  \"stateAction\": \"PUBLISH_EVENT\",\r\n  \"title\": \"Сап прогулки по рекам и каналам\"\r\n}",
+											"raw": "{\r\n  \"category\": 3,\r\n  \"description\": \"От английского SUP - Stand Up Paddle — \\\"стоя на доске с веслом\\\", гавайская разновидность сёрфинга, в котором серфер, стоя на доске, катается на волнах и при этом гребет веслом, а не руками, как в классическом серфинге.\",\r\n  \"eventDate\": \"2024-12-11 23:10:05\",\r\n  \"location\": {\r\n    \"lat\": 55.754167,\r\n    \"lon\": 37.62\r\n  },\r\n  \"paid\": true,\r\n  \"participantLimit\": 7,\r\n  \"requestModeration\": false,\r\n  \"stateAction\": \"PUBLISH_EVENT\",\r\n  \"title\": \"Сап прогулки по рекам и каналам\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -348,7 +378,13 @@
 									"name": "Получение пользователей",
 									"request": {
 										"method": "GET",
-										"header": [],
+										"header": [
+											{
+												"key": "X-User-Id",
+												"value": "{{userId}}",
+												"type": "text"
+											}
+										],
 										"url": {
 											"raw": "http://localhost:8080/admin/users",
 											"protocol": "http",
@@ -363,17 +399,17 @@
 											"query": [
 												{
 													"key": "from",
-													"value": "0",
+													"value": "1",
 													"disabled": true
 												},
 												{
 													"key": "size",
-													"value": "0",
+													"value": "1",
 													"disabled": true
 												},
 												{
 													"key": "ids",
-													"value": "[ids]",
+													"value": "1",
 													"disabled": true
 												}
 											]
@@ -385,10 +421,16 @@
 									"name": "Добавление пользователя",
 									"request": {
 										"method": "POST",
-										"header": [],
+										"header": [
+											{
+												"key": "X-User-Id",
+												"value": "{{userId}}",
+												"type": "text"
+											}
+										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n  \"email\": \"ivan.petrov@practicummail.ru\",\r\n  \"name\": \"Иван Петров\"\r\n}",
+											"raw": "{\r\n  \"email\": \"petr.ivanov@prcicummai.ru\",\r\n  \"name\": \"Петр Иванов\",\r\n  \"isAdmin\": false\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -403,7 +445,13 @@
 									"name": "Удаление пользователя",
 									"request": {
 										"method": "DELETE",
-										"header": [],
+										"header": [
+											{
+												"key": "X-User-Id",
+												"value": "33",
+												"type": "text"
+											}
+										],
 										"url": "http://localhost:8080/admin/users/{{userId}}"
 									},
 									"response": []
@@ -417,10 +465,16 @@
 									"name": "Добавление новой подборки (подборка может не содержать событий)",
 									"request": {
 										"method": "POST",
-										"header": [],
+										"header": [
+											{
+												"key": "X-User-id",
+												"value": "{{userId}}",
+												"type": "text"
+											}
+										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n  \"events\": [\r\n    1,\r\n    2,\r\n    3\r\n  ],\r\n  \"pinned\": false,\r\n  \"title\": \"Летние концерты\"\r\n}",
+											"raw": "{\r\n  \"events\": [3\r\n  ],\r\n  \"pinned\": false,\r\n  \"title\": \"Летние концерты\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -435,10 +489,16 @@
 									"name": "Обновить подборку",
 									"request": {
 										"method": "PATCH",
-										"header": [],
+										"header": [
+											{
+												"key": "X-User-Id",
+												"value": "{{userId}}",
+												"type": "text"
+											}
+										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n  \"events\": [\r\n    0\r\n  ],\r\n  \"pinned\": true,\r\n  \"title\": \"Необычные фотозоны\"\r\n}",
+											"raw": "{\r\n  \"events\": [2\r\n  ],\r\n  \"pinned\": true,\r\n  \"title\": \"Необычные фотоны\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -453,7 +513,13 @@
 									"name": "Удаление подборки",
 									"request": {
 										"method": "DELETE",
-										"header": [],
+										"header": [
+											{
+												"key": "X-User-Id",
+												"value": "{{userId}}",
+												"type": "text"
+											}
+										],
 										"url": "http://localhost:8080/admin/compilations/{{compId}}"
 									},
 									"response": []
@@ -526,7 +592,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n  \"requestIds\": [\r\n    1,\r\n    2,\r\n    3\r\n  ],\r\n  \"status\": \"CONFIRMED\"\r\n}",
+											"raw": "{\r\n  \"requestIds\": [\r\n    2\r\n  ],\r\n  \"status\": \"CONFIRMED\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -593,7 +659,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\r\n  \"annotation\": \"Сплав на байдарках похож на полет.\",\r\n  \"category\": 2,\r\n  \"description\": \"Сплав на байдарках похож на полет. На спокойной воде — это парение. На бурной, порожистой — выполнение фигур высшего пилотажа. И то, и другое дарят чувство обновления, феерические эмоции, яркие впечатления.\",\r\n  \"eventDate\": \"2024-12-31 15:10:05\",\r\n  \"location\": {\r\n    \"lat\": 55.754167,\r\n    \"lon\": 37.62\r\n  },\r\n  \"paid\": true,\r\n  \"participantLimit\": 10,\r\n  \"requestModeration\": false,\r\n  \"title\": \"Сплав на байдарках\"\r\n}",
+											"raw": "{\r\n  \"annotation\": \"Эксклюзивность нашего шоу гарантирует привлечение максимальной зрительской аудитории\",\r\n  \"category\": null,\r\n  \"description\": \"Что получится, если соединить кукурузу и полёт? Создатели \\\"Шоу летающей кукурузы\\\" испытали эту идею на практике и воплотили в жизнь инновационный проект, предлагающий свежий взгляд на развлечения...\",\r\n  \"eventDate\": \"2024-08-30\",\r\n  \"location\": {\r\n    \"lat\": 55.754167,\r\n    \"lon\": 37.62\r\n  },\r\n  \"paid\": true,\r\n  \"participantLimit\": 10,\r\n  \"requestModeration\": true,\r\n  \"title\": \"Знаменитое шоу 'кукуруза'\"\r\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -623,6 +689,15 @@
 									"request": {
 										"method": "POST",
 										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n<ns2:EntityProcessingRs schemaVersion=\"1.3\" xmlns=\"http://sber.insure/schema/packageinfo-10\" xmlns:ns2=\"http://sber.insure/schema/EntityProcessingRs-13\" xmlns:ns3=\"http://sber.insure/schema/perecoder-10\">\r\n    <ns2:PackageInfo>\r\n        <SourceSystem>adinsure</SourceSystem>\r\n        <TargetSystem>SSO</TargetSystem>\r\n        <MessageId>39cf6774-4e40-496c-b014-71083b0289ef</MessageId>\r\n        <CorrelationId>010SB56405220371389_10485286294_10577941154_2002_2024-14-08-03:00:32</CorrelationId>\r\n        <Timestamp>2024-08-14T03:00:52.7955554Z</Timestamp>\r\n        <EntityType>Contract</EntityType>\r\n    </ns2:PackageInfo>\r\n    <ns2:EntityId>\r\n        <ns3:DictName>Contracts</ns3:DictName>\r\n        <ns3:DictValues>\r\n            <ns3:DictValue>\r\n                <ns3:Group>SSO</ns3:Group>\r\n                <ns3:Value>10485286294</ns3:Value>\r\n            </ns3:DictValue>\r\n        </ns3:DictValues>\r\n    </ns2:EntityId>\r\n    <ns2:Status>\r\n        <ns2:StatusCode>1</ns2:StatusCode>\r\n        <ns2:StatusDesc>Дата начала или дата заключения не входит в срок действия генерального договора В документе есть ошибки. Пожалуйста, исправьте: Дата начала или дата заключения не входит в срок действия генерального договораДействие Выпустить на документе 43396670 не разрешено из-за ошибок.Error</ns2:StatusDesc>\r\n        <ns2:Comments>Дата начала или дата заключения не входит в срок действия генерального договора;В документе есть ошибки. Пожалуйста, исправьте: Дата начала или дата заключения не входит в срок действия генерального договора;</ns2:Comments>\r\n    </ns2:Status>\r\n    <ns2:AdditionalParams/>\r\n</ns2:EntityProcessingRs>\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
 										"url": {
 											"raw": "http://localhost:8080/users/{{userId}}/requests?eventId={{eventId}}",
 											"protocol": "http",

@@ -2,7 +2,9 @@ package ewm.Repositoryes;
 
 import ewm.Entityes.EventRequest;
 import ewm.Errors.EntityNotFoundException;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,8 +20,9 @@ public class EventRequestsRepo {
 
     public EventRequest findById(Long id) {
         EventRequest req = jpa.findById(id).orElse(null);
+
         if (req == null) {
-            throw new EntityNotFoundException("Запрос с id="+id+" не найден.");
+            throw new EntityNotFoundException("Запрос с id=" + id + " не найден.");
         }
         return req;
     }

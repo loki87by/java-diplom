@@ -1,6 +1,7 @@
 package ewm.Entityes;
 
 import jakarta.persistence.*;
+
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -65,5 +66,6 @@ public class Event {
         this.state = event.getState();
     }
 
-    public Event() {}
+    public Event() {
+    }
 }

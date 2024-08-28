@@ -1,7 +1,9 @@
 package ewm.Repositoryes;
 
 import ewm.Entityes.Location;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -10,8 +12,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LocationRepo {
     private final LocationJPARepository jpa;
+
     public Location findById(Long id) {
-            return jpa.findById(id).orElse(null);
+        return jpa.findById(id).orElse(null);
     }
 
     public Optional<Location> findByData(double lat, double lon) {

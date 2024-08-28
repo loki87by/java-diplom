@@ -1,6 +1,7 @@
 package ewm;
 
 import jakarta.persistence.EntityManagerFactory;
+
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;

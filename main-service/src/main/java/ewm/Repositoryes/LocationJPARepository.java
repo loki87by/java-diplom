@@ -1,7 +1,7 @@
 package ewm.Repositoryes;
 
-
 import ewm.Entityes.Location;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 

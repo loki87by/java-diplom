@@ -5,7 +5,10 @@ import ewm.Services.RequestService;
 import ewm.Errors.ConflictException;
 import ewm.Errors.ValidationException;
 import ewm.main_service.Utils;
+
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +27,9 @@ public class PrivateRequestsController {
         Long id = utils.idValidation(userId);
         return service.getRequests(id);
     }
+
     @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
     public EventRequest setRequest(
             @PathVariable Object userId,
             @RequestParam Object eventId) {
@@ -32,19 +37,19 @@ public class PrivateRequestsController {
         Long eId = utils.idValidation(eventId);
         EventRequest oldReq = service.findRequest(uId, eId);
 
-        if(oldReq != null) {
+        if (oldReq != null) {
             throw new ConflictException("Дубликат запроса");
         }
 
-        if(service.checkOwner(uId, eId)) {
+        if (!service.checkOwner(uId, eId)) {
             throw new ValidationException("Not owner");
         }
 
-        if(!service.checkPublished(eId)) {
+        if (!service.checkPublished(eId)) {
             throw new ValidationException("Not public");
         }
 
-        if(!service.checkLimit(eId)) {
+        if (!service.checkLimit(eId)) {
             throw new ConflictException("over limit");
         }
 

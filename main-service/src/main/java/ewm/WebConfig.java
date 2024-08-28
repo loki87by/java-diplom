@@ -1,9 +1,13 @@
 package ewm;
 
+import ewm.Errors.EntityNotFoundException;
 import ewm.Repositoryes.UserRepo;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -20,6 +24,7 @@ public class WebConfig implements WebMvcConfigurer {
             @Override
             public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
                 String userIdHeader = request.getHeader("X-User-Id");
+
                 if (userIdHeader == null || userIdHeader.isEmpty()) {
 
                     if (response != null) {
@@ -30,6 +35,12 @@ public class WebConfig implements WebMvcConfigurer {
                         response.getWriter().flush();
                         return false;
                     }
+                }
+
+                if (repo.findById(Long.parseLong(userIdHeader)) == null) {
+                    throw new EntityNotFoundException("Пользователь с id=" +
+                            Long.parseLong(userIdHeader) +
+                            " не найден.");
                 }
 
                 if (!repo.findById(Long.parseLong(userIdHeader)).getIsAdmin()) {

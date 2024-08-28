@@ -10,7 +10,9 @@ import ewm.Repositoryes.EventRequestsRepo;
 import ewm.Repositoryes.EventsRepo;
 import ewm.Errors.EntityNotFoundException;
 import ewm.Errors.ValidationException;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -38,6 +40,7 @@ public class EventService {
 
     public FullEventDto getEvent(Long userId, Long eventId) {
         Event result = eRepo.getEvent(userId, eventId);
+
         if (result == null) {
             throw new EntityNotFoundException("Event with id=" + eventId + " was not found");
         }
@@ -46,7 +49,7 @@ public class EventService {
 
     public FullEventDto getEvent(Long eventId) {
 
-        if(eRepo.getEvent(eventId) == null) {
+        if (eRepo.getEvent(eventId) == null) {
             throw new EntityNotFoundException("Event with id=" + eventId + " was not found");
         }
         return mapper.toFullDto(eRepo.getEvent(eventId));
@@ -71,8 +74,7 @@ public class EventService {
                 if (value != null) {
                     field.set(oldDto, value);
                 }
-            }
-            catch (IllegalArgumentException | IllegalAccessException e) {
+            } catch (IllegalArgumentException | IllegalAccessException e) {
                 throw new ValidationException(e.getMessage());
             }
         }
@@ -82,8 +84,13 @@ public class EventService {
 
     public EventRequest getRequest(Long userId, Long eventId) {
         Event event = eRepo.getEvent(userId, eventId);
+
         if (event == null) {
-            throw new EntityNotFoundException("Событие с id=" + eventId + " с запросом от пользователя с id=" + userId + " не найдено.");
+            throw new EntityNotFoundException("Событие с id=" +
+                    eventId +
+                    " с запросом от пользователя с id=" +
+                    userId +
+                    " не найдено.");
         }
         return rRepo.findByEventId(eventId);
     }
@@ -99,6 +106,7 @@ public class EventService {
         List<Long> reqIds = body.getRequestIds();
 
         for (Long id : reqIds) {
+
             if (!checkStatus(id)) {
                 throw new ValidationException("Request must have status PENDING");
             }
@@ -148,6 +156,7 @@ public class EventService {
                 from,
                 size);
         List<FullEventDto> fulls = new ArrayList<>();
+
         for (Event event : events) {
             fulls.add(mapper.toFullDto(event));
         }
@@ -170,7 +179,9 @@ public class EventService {
                         correspondingField.setAccessible(true);
                         correspondingField.set(oldDto, value);
                     } catch (NoSuchFieldException e) {
+
                         if (field.getName().equals("stateAction")) {
+
                             if (value.equals("PUBLISH_EVENT")) {
                                 oldDto.setState("PUBLISHED");
                             } else if (value.equals("REJECT_EVENT")) {
@@ -207,6 +218,7 @@ public class EventService {
                 from,
                 size);
         List<EventDto> fulls = new ArrayList<>();
+
         for (Event event : events) {
             fulls.add(mapper.toObject(event));
         }

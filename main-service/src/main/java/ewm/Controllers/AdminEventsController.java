@@ -6,11 +6,12 @@ import ewm.Services.EventService;
 import ewm.Errors.EntityNotFoundException;
 import ewm.Errors.ForbiddenException;
 import ewm.main_service.Utils;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -30,15 +31,15 @@ public class AdminEventsController {
             @RequestParam(required = false) String rangeEnd,
             @RequestParam(defaultValue = "0") int from,
             @RequestParam(defaultValue = "10") int size) {
-        List<Long> uIds = new ArrayList<>();
-        for (Object user: users) {
-            Long id = utils.idValidation(user);
-            uIds.add(id);
+        List<Long> uIds = null;
+
+        if (users != null && !users.isEmpty()) {
+            uIds = utils.massValidate(users);
         }
-        List<Long> cIds = new ArrayList<>();
-        for (Object category: categories) {
-            Long id = utils.idValidation(category);
-            cIds.add(id);
+        List<Long> cIds = null;
+
+        if (categories != null && !categories.isEmpty()) {
+            cIds = utils.massValidate(categories);
         }
         return service.findEvents(uIds,
                 cIds,
@@ -51,12 +52,12 @@ public class AdminEventsController {
 
     @PatchMapping("/{eventId}")
     public FullEventDto updateEvent(@RequestBody EventUpdateResponse data,
-            @PathVariable Object eventId) {
+                                    @PathVariable Object eventId) {
         Long id = utils.idValidation(eventId);
         FullEventDto old = service.getEvent(id);
 
         if (old == null) {
-            throw new EntityNotFoundException("Event with id="+eventId+" was not found");
+            throw new EntityNotFoundException("Event with id=" + eventId + " was not found");
         }
         Timestamp eventTime = Timestamp.valueOf(data.getEventDate().toLocalDateTime());
         long currentTimeMillis = System.currentTimeMillis();

@@ -2,10 +2,13 @@ package ewm.Services;
 
 import ewm.Entityes.Event;
 import ewm.Entityes.EventRequest;
+import ewm.Errors.ValidationException;
 import ewm.Repositoryes.EventRequestsRepo;
 import ewm.Repositoryes.EventsRepo;
 import ewm.Errors.EntityNotFoundException;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -29,7 +32,12 @@ public class RequestService {
 
     public boolean checkOwner(Long userId, Long eventId) {
         Event event = eRepo.getEvent(eventId);
-        return Objects.equals(userId, event.getUserId());
+
+        if (event == null) {
+            throw new EntityNotFoundException("Событие с id=" + eventId + " не найдено.");
+        }
+        System.out.println(Objects.equals((event.getUserId() - userId), 0L));
+        return Objects.equals((event.getUserId() - userId), 0L);
     }
 
     public boolean checkPublished(Long eventId) {
@@ -60,11 +68,16 @@ public class RequestService {
         return rRepo.addRequest(req);
     }
 
-    public EventRequest cancelRequest(Long userId, Long eventId) {
-        EventRequest req = rRepo.findRequest(userId, eventId);
+    public EventRequest cancelRequest(Long userId, Long requestId) {
+        EventRequest req = rRepo.findById(requestId);
 
-        if(req == null) {
-            throw new EntityNotFoundException("Event with id="+eventId+" was not found");
+        if (req == null) {
+            throw new EntityNotFoundException("Your request with id=" + requestId + " was not found.");
+        }
+        Long uId = req.getRequester();
+
+        if (!Objects.equals(uId, userId)) {
+            throw new ValidationException("Not owner");
         }
         req.setStatus("PENDING");
         return rRepo.addRequest(req);

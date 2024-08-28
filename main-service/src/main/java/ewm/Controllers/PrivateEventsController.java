@@ -10,7 +10,10 @@ import ewm.Services.EventService;
 import ewm.Errors.ConflictException;
 import ewm.Errors.ForbiddenException;
 import ewm.main_service.Utils;
+
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
@@ -86,10 +89,11 @@ public class PrivateEventsController {
     }
 
     @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
     public FullEventDto setEvent(
             @RequestBody newEventDto dto, @PathVariable Object userId) {
         Long uId = utils.idValidation(userId);
-        Timestamp eventTime = Timestamp.valueOf(dto.getEventDate());
+        Timestamp eventTime = utils.stringToTimestamp(dto.getEventDate(), true);
         long currentTimeMillis = System.currentTimeMillis();
         Timestamp minimalTime = new Timestamp(currentTimeMillis + 7200000);
 

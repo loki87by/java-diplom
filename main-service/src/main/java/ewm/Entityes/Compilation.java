@@ -1,7 +1,9 @@
 package ewm.Entityes;
 
-import ewm.Dtos.EventDto;
+import ewm.Dtos.EventCompDto;
+
 import jakarta.persistence.*;
+
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -19,6 +21,5 @@ public class Compilation {
     @Column(name = "pinned")
     Boolean pinned;
     @Transient
-    List<EventDto> events = new ArrayList<>();
-
+    List<EventCompDto> events = new ArrayList<>();
 }
