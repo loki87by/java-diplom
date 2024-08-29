@@ -92,9 +92,7 @@ public class EventsRepo {
                 onlyAvailable,
                 sort);
         Pageable pageable = PageRequest.of(from, size);
-        List<Event> all = jpa.findAll(spec, pageable);
-        System.out.println("all: " + all);
-        return all;
+        return jpa.findAll(spec, pageable);
     }
 
     public List<Event> findAllByCategoryId(Long id) {

@@ -2,9 +2,13 @@ package ewm.Controllers;
 
 import ewm.Dtos.EventDto;
 import ewm.Dtos.FullEventDto;
+import ewm.Entityes.Log;
 import ewm.Services.EventService;
 import ewm.Errors.EntityNotFoundException;
+import ewm.main_service.SendLog;
 import ewm.main_service.Utils;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -21,7 +25,6 @@ public class EventsController {
 
     //PUBLIC
     @GetMapping("")
-    //TODO: add to statistic
     public List<EventDto> getEvents(
             @RequestParam(required = false) String text,
             @RequestParam(required = false) List<Object> cats,
@@ -31,7 +34,13 @@ public class EventsController {
             @RequestParam(required = false) Boolean onlyAvailable,
             @RequestParam(required = false) String sort,
             @RequestParam(defaultValue = "0") int from,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "10") int size,
+            HttpServletRequest req) {
+        String ip = req.getRemoteAddr();
+        String uri = req.getRequestURI();
+        Log log = new Log(uri, ip);
+        SendLog logger = new SendLog();
+        logger.sendPost(log);
         List<Long> catIds = null;
 
         if (cats != null && !cats.isEmpty()) {
@@ -49,8 +58,12 @@ public class EventsController {
     }
 
     @GetMapping("/{eventId}")
-    //TODO: add to statistic
-    public FullEventDto getEvent(@PathVariable Long eventId) {
+    public FullEventDto getEvent(@PathVariable Long eventId, HttpServletRequest req) {
+        String ip = req.getRemoteAddr();
+        String uri = req.getRequestURI();
+        Log log = new Log(uri, ip);
+        SendLog logger = new SendLog();
+        logger.sendPost(log);
         Long id = utils.idValidation(eventId);
         FullEventDto event = service.getEvent(id);
 
