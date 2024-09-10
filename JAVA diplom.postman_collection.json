@@ -734,6 +734,44 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "statistic",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9090/stats?start=2024-08-29 15:18:19&end=2024-08-29 15:20:00&uris=/events, /events/4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9090",
+					"path": [
+						"stats"
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "2024-08-29 15:18:19"
+						},
+						{
+							"key": "end",
+							"value": "2024-08-29 15:20:00"
+						},
+						{
+							"key": "unique",
+							"value": "true",
+							"disabled": true
+						},
+						{
+							"key": "uris",
+							"value": "/events, /events/4"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
